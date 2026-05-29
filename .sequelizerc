@@ -1,0 +1,10 @@
+const path = require('path');
+
+require('ts-node/register');
+
+module.exports = {
+    'config': path.resolve('dist/database/config', 'config.js'),
+  'models-path': path.resolve('src/database', 'models'),
+  'seeders-path': path.resolve('src/database', 'seeders'),
+  'migrations-path': path.resolve('src/database', 'migrations')
+};

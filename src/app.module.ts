@@ -3,7 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { getSequelizeConfig } from './database/config/sequelzie-config';
+import { getSequelizeConfig } from './database/config/sequelize.config';
+import { FilesModule } from './modules/files/files.module';
+import { ProductsModule } from './modules/products/products.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,8 +17,12 @@ import { getSequelizeConfig } from './database/config/sequelzie-config';
       inject: [ConfigService],
       useFactory: getSequelizeConfig,
     }),
+    FilesModule,
+    ProductsModule,
+    CategoriesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
