@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:status": "npm run build && npx sequelize-cli db:migrate:status",
-    "migrate": "npm run build && npx sequelize-cli db:migrate"
+    "migrate": "npm run build && npx sequelize-cli db:migrate",
+    "db:import-products": "ts-node src/database/seed-products-excel.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1043.0",
@@ -39,7 +40,8 @@
     "rxjs": "^7.8.1",
     "sequelize": "^6.37.8",
     "sequelize-typescript": "^2.1.6",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
