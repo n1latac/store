@@ -8,7 +8,7 @@
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><NuxtLink to="/">Главная</NuxtLink></li>
+                  <li class="breadcrumb-item"><NuxtLink to="/">Головна</NuxtLink></li>
                   <li class="breadcrumb-item active" aria-current="page">Магазин / Каталог</li>
                 </ul>
               </nav>
@@ -28,11 +28,11 @@
             <aside class="sidebar-wrapper">
               <!-- single sidebar start -->
               <div class="sidebar-single">
-                <h5 class="sidebar-title">Категории</h5>
+                <h5 class="sidebar-title">Категорії</h5>
                 <div class="sidebar-body">
                   <ul class="shop-categories-list">
                     <li :class="{ active: !activeCategoryId }">
-                      <a href="#" @click.prevent="selectCategory(null)">Все категории</a>
+                      <a href="#" @click.prevent="selectCategory(null)">Усі категорії</a>
                     </li>
                     <li 
                       v-for="parentCat in parentCategories" 
@@ -61,14 +61,14 @@
 
               <!-- single sidebar start -->
               <div class="sidebar-single">
-                <h5 class="sidebar-title">Фильтр по цене</h5>
+                <h5 class="sidebar-title">Фільтр за ціною</h5>
                 <div class="sidebar-body">
                   <div class="price-filter-wrapper">
                     <div class="d-flex align-items-center mb-2">
                       <input 
                         type="number" 
                         v-model.number="tempMinPrice" 
-                        placeholder="Мин" 
+                        placeholder="Мін" 
                         class="form-control mr-2"
                         style="height: 35px; font-size: 14px;"
                       >
@@ -85,7 +85,7 @@
                       class="btn btn-secondary w-100" 
                       @click="applyPriceFilter"
                       style="background-color: #00DC82; border: none; font-size: 14px; padding: 6px;"
-                    >Применить</button>
+                    >Застосувати</button>
                   </div>
                 </div>
               </div>
@@ -100,16 +100,16 @@
               <!-- shop product top toolbar start -->
               <div class="shop-top-bar d-flex align-items-center justify-content-between">
                 <div class="select-shoing-wrap">
-                  <p>Найдено товаров: {{ filteredProducts.length }}</p>
+                  <p>Знайдено товарів: {{ filteredProducts.length }}</p>
                 </div>
                 <div class="d-flex align-items-center">
                   <!-- Sort select -->
                   <div class="product-short-select mr-3">
                     <select class="form-control" v-model="sortBy" style="height: 35px; font-size: 14px;">
-                      <option value="default">Сортировка: По умолчанию</option>
-                      <option value="price-asc">Цена: от дешевых к дорогим</option>
-                      <option value="price-desc">Цена: от дорогих к дешевым</option>
-                      <option value="name-asc">Название: А-Я</option>
+                      <option value="default">Сортування: За замовчуванням</option>
+                      <option value="price-asc">Ціна: від дешевих до дорогих</option>
+                      <option value="price-desc">Ціна: від дорогих до дешевих</option>
+                      <option value="name-asc">Назва: А-Я</option>
                     </select>
                   </div>
                   <!-- Grid/List Switcher -->
@@ -118,7 +118,7 @@
                       href="#" 
                       :class="{ active: viewMode === 'grid' }" 
                       @click.prevent="viewMode = 'grid'" 
-                      title="Сетка"
+                      title="Сітка"
                     ><i class="fa fa-th"></i></a>
                     <a 
                       href="#" 
@@ -153,11 +153,11 @@
                         <a 
                           href="#" 
                           @click.prevent="toggleWishlist(product)" 
-                          :title="isInWishlist(product.id) ? 'Удалить из избранного' : 'В избранное'"
+                          :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
                         >
                           <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
                         </a>
-                        <NuxtLink :to="`/product/${product.id}`" title="Просмотр"><i class="ion-android-eye"></i></NuxtLink>
+                        <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-android-eye"></i></NuxtLink>
                       </div>
                     </div>
 
@@ -173,10 +173,10 @@
                         <span class="regular-price">{{ product.price }} ₴</span>
                       </div>
                       <p v-if="viewMode === 'list'" class="mt-2 text-muted">
-                        Нажмите кнопку ниже или перейдите в детальный просмотр товара для изучения характеристик.
+                        Натисніть кнопку нижче або перейдіть у детальний перегляд товару для вивчення характеристик.
                       </p>
                       <div class="product-action-link mt-3">
-                        <a href="#" @click.prevent="addToCart(product)" class="btn-add-cart">В корзину</a>
+                        <a href="#" @click.prevent="addToCart(product)" class="btn-add-cart">В кошик</a>
                         <a 
                           v-if="viewMode === 'list'"
                           href="#" 

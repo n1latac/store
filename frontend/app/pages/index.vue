@@ -20,7 +20,7 @@
                     <h2 class="animated fadeInDown">{{ activeSlide.subtitle }}</h2>
                     <h1 class="animated fadeInUp">{{ activeSlide.title }}</h1>
                     <h3 class="animated fadeInUp">{{ activeSlide.desc }}</h3>
-                    <NuxtLink to="/shop" class="btn-hero animated fadeInUp">Купить сейчас</NuxtLink>
+                    <NuxtLink to="/shop" class="btn-hero animated fadeInUp">Купити зараз</NuxtLink>
                   </div>
                 </div>
               </div>
@@ -48,8 +48,8 @@
                     <i class="ion-android-plane"></i>
                   </div>
                   <div class="policy-content">
-                    <h5>Быстрая доставка</h5>
-                    <p>По всей Украине Новой Почтой</p>
+                    <h5>Швидка доставка</h5>
+                    <p>По всій Україні Новою Поштою</p>
                   </div>
                 </div>
               </div>
@@ -60,8 +60,8 @@
                     <i class="ion-help-buoy"></i>
                   </div>
                   <div class="policy-content">
-                    <h5>Поддержка 24/7</h5>
-                    <p>Наши менеджеры всегда на связи</p>
+                    <h5>Підтримка 24/7</h5>
+                    <p>Наші менеджери завжди на зв’язку</p>
                   </div>
                 </div>
               </div>
@@ -72,8 +72,8 @@
                     <i class="ion-lock-combination"></i>
                   </div>
                   <div class="policy-content">
-                    <h5>Безопасная оплата</h5>
-                    <p>100% защита ваших платежей</p>
+                    <h5>Безпечна оплата</h5>
+                    <p>100% захист ваших платежів</p>
                   </div>
                 </div>
               </div>
@@ -112,8 +112,8 @@
           <div class="row">
             <div class="col-12">
               <div class="section-title text-center">
-                <h2>Наши товары</h2>
-                <p>Посмотрите новинки и популярные предложения из каталога</p>
+                <h2>Наші товари</h2>
+                <p>Подивіться новинки та популярні пропозиції з каталогу</p>
               </div>
             </div>
           </div>
@@ -127,14 +127,14 @@
                       href="#" 
                       :class="{ active: activeTab === 'new' }" 
                       @click.prevent="activeTab = 'new'"
-                    >Новые поступления</a>
+                    >Нові надходження</a>
                   </li>
                   <li>
                     <a 
                       href="#" 
                       :class="{ active: activeTab === 'featured' }" 
                       @click.prevent="activeTab = 'featured'"
-                    >Популярные</a>
+                    >Популярні</a>
                   </li>
                 </ul>
               </div>
@@ -156,11 +156,11 @@
                           <a 
                             href="#" 
                             @click.prevent="toggleWishlist(product)" 
-                            :title="isInWishlist(product.id) ? 'Удалить из избранного' : 'В избранное'"
+                            :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
                           >
                             <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
                           </a>
-                          <NuxtLink :to="`/product/${product.id}`" title="Просмотр"><i class="ion-android-eye"></i></NuxtLink>
+                          <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-android-eye"></i></NuxtLink>
                         </div>
                       </div>
                       <div class="product-content">
@@ -174,7 +174,7 @@
                           <span class="regular-price">{{ product.price }} ₴</span>
                         </div>
                         <div class="product-action-link">
-                          <a href="#" @click.prevent="addToCart(product)" class="btn-add-cart">В корзину</a>
+                          <a href="#" @click.prevent="addToCart(product)" class="btn-add-cart">В кошик</a>
                         </div>
                       </div>
                     </div>
@@ -203,15 +203,15 @@ definePageMeta({
 const slides = [
   {
     bg: '/assets/img/slider/home1-slide1.jpg',
-    subtitle: 'ПЕРСОНАЛЬНЫЕ КОМПЬЮТЕРЫ',
-    title: 'Высокая мощность',
-    desc: 'Мини ПК MinisForum и Geekom от 10,500 ₴',
+    subtitle: 'ПЕРСОНАЛЬНІ КОМП’ЮТЕРИ',
+    title: 'Висока потужність',
+    desc: 'Міні ПК MinisForum та Geekom від 10,500 ₴',
   },
   {
     bg: '/assets/img/slider/home1-slide2.jpg',
-    subtitle: 'СОВРЕМЕННЫЕ МОНИТОРЫ',
-    title: 'Четкое изображение',
-    desc: 'IPS дисплеи Dell и Acer с частотой до 144Hz',
+    subtitle: 'СУЧАСНІ МОНІТОРИ',
+    title: 'Чітке зображення',
+    desc: 'IPS дисплеї Dell та Acer з частотою до 144Hz',
   }
 ];
 

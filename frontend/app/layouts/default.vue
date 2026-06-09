@@ -12,11 +12,11 @@ import Footer from '~/components/Footer.vue';
 
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} - Oregon Store` : 'Oregon - Multipurpose Store';
+    return titleChunk ? `${titleChunk} - Aivix tech Store` : 'Aivix tech - Multipurpose Store';
   },
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { name: 'description', content: 'Магазин компьютерной техники и электроники Oregon' },
+    { name: 'description', content: 'Магазин комп’ютерної техніки та електроніки Aivix tech' },
     { charset: 'utf-8' }
   ],
   link: [

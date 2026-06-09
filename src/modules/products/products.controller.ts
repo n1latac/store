@@ -39,16 +39,28 @@ export class ProductsController {
   }
 
   @Get()
-  getAll(@Query('filters') filters?: string) {
+  getAll(
+    @Query('filters') filters?: string,
+    @Query('search') search?: string,
+    @Query('category_id') categoryId?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
     let parsedFilters = {};
     if (filters) {
       try {
         parsedFilters = JSON.parse(filters); // Превращаем строку из URL в объект
       } catch (error) {
-        // Если прислали кривой JSON, просто игнорируем и отдаем все товары
+        // Если прислали кривой JSON, просто игнорируем
       }
     }
-    return this.productsService.findAll(parsedFilters);
+    return this.productsService.findAll({
+      filters: parsedFilters,
+      search,
+      categoryId: categoryId ? +categoryId : undefined,
+      page: page ? +page : undefined,
+      limit: limit ? +limit : undefined,
+    });
   }
 
   @Get(':id')

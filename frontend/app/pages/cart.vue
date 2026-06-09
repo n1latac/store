@@ -8,8 +8,8 @@
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><NuxtLink to="/">Главная</NuxtLink></li>
-                  <li class="breadcrumb-item active" aria-current="page">Корзина</li>
+                  <li class="breadcrumb-item"><NuxtLink to="/">Головна</NuxtLink></li>
+                  <li class="breadcrumb-item active" aria-current="page">Кошик</li>
                 </ul>
               </nav>
             </div>
@@ -31,12 +31,12 @@
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th class="pro-thumbnail">Изображение</th>
+                        <th class="pro-thumbnail">Зображення</th>
                         <th class="pro-title">Товар</th>
-                        <th class="pro-price">Цена</th>
-                        <th class="pro-quantity">Количество</th>
-                        <th class="pro-subtotal">Итого</th>
-                        <th class="pro-remove">Удалить</th>
+                        <th class="pro-price">Ціна</th>
+                        <th class="pro-quantity">Кількість</th>
+                        <th class="pro-subtotal">Всього</th>
+                        <th class="pro-remove">Видалити</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -76,12 +76,12 @@
                 <div class="cart-update-option d-xs-block d-md-flex justify-content-between align-items-center mt-30">
                   <div class="apply-coupon-wrapper">
                     <NuxtLink to="/shop" class="btn btn-secondary text-white font-weight-bold" style="background-color: #777; border: none; padding: 10px 20px;">
-                      Продолжить покупки
+                      Продовжити покупки
                     </NuxtLink>
                   </div>
                   <div class="cart-update mt-xs-30">
                     <button @click="clearCart" class="btn btn-secondary font-weight-bold" style="background-color: #dc3545; border: none; padding: 10px 20px;">
-                      Очистить корзину
+                      Очистити кошик
                     </button>
                   </div>
                 </div>
@@ -91,26 +91,26 @@
                   <div class="col-lg-5 ml-auto">
                     <div class="cart-calculator-wrapper border p-4 rounded bg-light">
                       <div class="cart-calculate-items">
-                        <h3 class="border-bottom pb-2 mb-3">Сумма заказа</h3>
+                        <h3 class="border-bottom pb-2 mb-3">Сума замовлення</h3>
                         <div class="table-responsive">
                           <table class="table">
                             <tr>
-                              <td>Товары</td>
+                              <td>Товари</td>
                               <td>{{ cartTotal }} ₴</td>
                             </tr>
                             <tr>
                               <td>Доставка</td>
-                              <td>Бесплатно</td>
+                              <td>Безкоштовно</td>
                             </tr>
                             <tr class="total border-top">
-                              <td class="font-weight-bold">Итого</td>
+                              <td class="font-weight-bold">Разом</td>
                               <td class="text-success font-weight-bold">{{ cartTotal }} ₴</td>
                             </tr>
                           </table>
                         </div>
                       </div>
                       <NuxtLink to="/checkout" class="btn btn-secondary d-block text-center text-white font-weight-bold mt-3" style="background-color: #00DC82; border: none; padding: 12px;">
-                        Перейти к оформлению
+                        Перейти до оформлення
                       </NuxtLink>
                     </div>
                   </div>
@@ -122,10 +122,10 @@
                 <div class="empty-cart-icon mb-4" style="font-size: 64px; color: #ccc;">
                   <i class="ion-bag"></i>
                 </div>
-                <h3>Ваша корзина пуста!</h3>
-                <p class="text-muted mt-2">Вы не добавили ни одного товара в корзину.</p>
+                <h3>Ваш кошик порожній!</h3>
+                <p class="text-muted mt-2">Ви не додали жодного товару в кошик.</p>
                 <NuxtLink to="/shop" class="btn btn-secondary text-white font-weight-bold mt-4" style="background-color: #00DC82; border: none; padding: 12px 30px;">
-                  Вернуться в магазин
+                  Повернутися до магазину
                 </NuxtLink>
               </div>
             </div>
@@ -148,6 +148,21 @@ const { cartItems, cartTotal, removeFromCart, updateQuantity, clearCart } = useC
 </script>
 
 <style scoped>
+.cart-table table thead tr th,
+.cart-table table tbody tr td {
+  white-space: normal !important;
+  vertical-align: middle;
+}
+.pro-title {
+  max-width: 280px;
+  word-wrap: break-word;
+}
+.pro-thumbnail {
+  width: 100px;
+}
+.pro-remove {
+  width: 80px;
+}
 .cart-img {
   max-width: 80px;
   max-height: 80px;

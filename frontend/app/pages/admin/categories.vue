@@ -3,8 +3,8 @@
     <!-- Header -->
     <div class="flex justify-between items-center bg-white dark:bg-gray-950 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Управление категориями</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Создавайте категории и подкатегории для товаров</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Керування категоріями</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Створюйте категорії та підкатегорії для товарів</p>
       </div>
       <UButton
         icon="i-lucide-plus"
@@ -13,7 +13,7 @@
         class="rounded-xl shadow-sm hover:scale-[1.02] transition-transform duration-200"
         @click="openCreateModal"
       >
-        Создать категорию
+        Створити категорію
       </UButton>
     </div>
 
@@ -54,30 +54,30 @@
       <!-- Empty State -->
       <div v-if="!categories?.length && status !== 'pending'" class="flex flex-col items-center justify-center py-12 px-4 text-center">
         <UIcon name="i-lucide-folder-open" class="w-12 h-12 text-gray-300 dark:text-gray-700 mb-3" />
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Нет категорий</h3>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Немає категорій</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm mt-1">
-          Вы еще не создали ни одной категории. Нажмите кнопку выше, чтобы добавить первую.
+          Ви ще не створили жодної категорії. Натисніть кнопку вище, щоб додати першу.
         </p>
       </div>
     </UCard>
 
     <!-- Create / Edit Modal -->
-    <UModal v-model:open="isOpen" :title="editId ? 'Редактировать категорию' : 'Создать категорию'" :description="editId ? 'Измените информацию о категории товара' : 'Заполните информацию о новой категории товара'">
+    <UModal v-model:open="isOpen" :title="editId ? 'Редагувати категорію' : 'Створити категорію'" :description="editId ? 'Змініть інформацію про категорію товару' : 'Заповніть інформацію про нову категорію товару'">
       <template #body>
         <UForm :state="formState" class="space-y-4" @submit="onSubmit">
-          <UFormField label="Название (UA)" name="name_uk" required>
-            <UInput v-model="formState.name_uk" placeholder="Например: Кросівки" class="w-full" size="md" />
+          <UFormField label="Назва (UA)" name="name_uk" required>
+            <UInput v-model="formState.name_uk" placeholder="Наприклад: Кросівки" class="w-full" size="md" />
           </UFormField>
 
-          <UFormField label="Название (EN)" name="name_en">
-            <UInput v-model="formState.name_en" placeholder="Например: Sneakers" class="w-full" size="md" />
+          <UFormField label="Назва (EN)" name="name_en">
+            <UInput v-model="formState.name_en" placeholder="Наприклад: Sneakers" class="w-full" size="md" />
           </UFormField>
 
-          <UFormField label="Родительская категория" name="parent_id">
+          <UFormField label="Батьківська категорія" name="parent_id">
             <USelect
               v-model="formState.parent_id"
               :items="parentCategoryItems"
-              placeholder="Выберите категорию (если это подкатегория)"
+              placeholder="Оберіть категорію (якщо це підкатегорія)"
               class="w-full"
               size="md"
             />
@@ -85,10 +85,10 @@
 
           <div class="flex justify-end gap-3 pt-4">
             <UButton variant="ghost" color="neutral" @click="isOpen = false">
-              Отмена
+              Скасувати
             </UButton>
             <UButton type="submit" color="primary" :loading="submitting">
-              {{ editId ? 'Сохранить' : 'Создать' }}
+              {{ editId ? 'Зберегти' : 'Створити' }}
             </UButton>
           </div>
         </UForm>
@@ -114,10 +114,10 @@ const { data: categories, refresh, status } = await useFetch<any[]>(`${apiBase}/
 // Columns Definition
 const columns = [
   { accessorKey: 'id', header: 'ID' },
-  { accessorKey: 'name_uk', header: 'Название (UA)' },
-  { accessorKey: 'name_en', header: 'Название (EN)' },
-  { accessorKey: 'parent_id', header: 'Родительская категория' },
-  { id: 'actions', header: 'Действия' },
+  { accessorKey: 'name_uk', header: 'Назва (UA)' },
+  { accessorKey: 'name_en', header: 'Назва (EN)' },
+  { accessorKey: 'parent_id', header: 'Батьківська категорія' },
+  { id: 'actions', header: 'Дії' },
 ];
 
 // Modal & Form State
@@ -134,7 +134,7 @@ const formState = reactive({
 
 // Helper: Get Category Name by ID
 const getCategoryName = (parentId: number | null) => {
-  if (!parentId) return '— (Главная)';
+  if (!parentId) return '— (Головна)';
   const cat = categories.value?.find((c) => c.id === parentId);
   return cat ? `${cat.name_uk} (${cat.name_en || 'EN'})` : '—';
 };
@@ -142,7 +142,7 @@ const getCategoryName = (parentId: number | null) => {
 // Computed parent items for select dropdown
 const parentCategoryItems = computed(() => {
   const items = [
-    { label: '— Нет (Сделать главной)', value: 'null' }
+    { label: '— Немає (Зробити головною)', value: 'null' }
   ];
   if (categories.value) {
     categories.value.forEach((cat) => {
@@ -193,8 +193,8 @@ const onSubmit = async () => {
         },
       });
       toast.add({
-        title: 'Успешно',
-        description: 'Категория обновлена',
+        title: 'Успішно',
+        description: 'Категорію оновлено',
         color: 'success',
       });
     } else {
@@ -206,8 +206,8 @@ const onSubmit = async () => {
         },
       });
       toast.add({
-        title: 'Успешно',
-        description: 'Категория добавлена',
+        title: 'Успішно',
+        description: 'Категорію додано',
         color: 'success',
       });
     }
@@ -216,9 +216,9 @@ const onSubmit = async () => {
     await refresh();
   } catch (error: any) {
     console.error(error);
-    const msg = error.data?.message || 'Не удалось сохранить категорию';
+    const msg = error.data?.message || 'Не вдалося зберегти категорію';
     toast.add({
-      title: 'Ошибка',
+      title: 'Помилка',
       description: Array.isArray(msg) ? msg.join(', ') : msg,
       color: 'error',
     });
@@ -229,7 +229,7 @@ const onSubmit = async () => {
 
 // Delete Category
 const deleteCategory = async (id: number) => {
-  if (!confirm('Вы уверены, что хотите удалить эту категорию?')) return;
+  if (!confirm('Ви впевнені, що хочете видалити цю категорію?')) return;
   deletingId.value = id;
 
   try {
@@ -242,17 +242,17 @@ const deleteCategory = async (id: number) => {
     });
 
     toast.add({
-      title: 'Успешно',
-      description: 'Категория удалена',
+      title: 'Успішно',
+      description: 'Категорію видалено',
       color: 'success',
     });
 
     await refresh();
   } catch (error: any) {
     console.error(error);
-    const msg = error.data?.message || 'Не удалось удалить категорию';
+    const msg = error.data?.message || 'Не вдалося видалити категорію';
     toast.add({
-      title: 'Ошибка удаления',
+      title: 'Помилка видалення',
       description: Array.isArray(msg) ? msg.join(', ') : msg,
       color: 'error',
     });

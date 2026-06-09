@@ -8,7 +8,7 @@
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><NuxtLink to="/">Главная</NuxtLink></li>
+                  <li class="breadcrumb-item"><NuxtLink to="/">Головна</NuxtLink></li>
                   <li class="breadcrumb-item"><NuxtLink to="/shop">Магазин</NuxtLink></li>
                   <li class="breadcrumb-item active" aria-current="page">{{ product.name_uk }}</li>
                 </ul>
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="product-description-brief mb-4 text-muted">
-                      Характеристики этого товара можно посмотреть в таблице ниже. Товар доступен для покупки.
+                      Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.
                     </div>
 
                     <!-- Quantity and actions -->
@@ -86,7 +86,7 @@
                         class="btn btn-secondary text-white font-weight-bold" 
                         @click="handleAddToCart"
                         style="background-color: #00DC82; border: none; height: 45px; padding: 0 25px;"
-                      >В корзину</button>
+                      >В кошик</button>
                     </div>
 
                     <!-- External Resource Link Button -->
@@ -97,7 +97,7 @@
                         class="btn btn-outline-info w-100 font-weight-bold d-flex align-items-center justify-content-center"
                         style="height: 45px; font-size: 16px; border-color: #17a2b8;"
                       >
-                        <i class="ion-android-open mr-2"></i> Купить на первоисточнике
+                        <i class="ion-android-open mr-2"></i> Купити на першоджерелі
                       </a>
                     </div>
 
@@ -112,7 +112,7 @@
                           class="mr-2"
                           :class="isInWishlist(product.id) ? 'ion-android-favorite text-danger' : 'ion-android-favorite-outline'"
                         ></i>
-                        {{ isInWishlist(product.id) ? 'Удалить из избранного' : 'Добавить в избранное' }}
+                        {{ isInWishlist(product.id) ? 'Видалити з обраного' : 'Додати до обраного' }}
                       </a>
                     </div>
                   </div>
@@ -139,7 +139,7 @@
                           href="#" 
                           :class="{ active: activeTab === 'description' }" 
                           @click.prevent="activeTab = 'description'"
-                        >Описание</a>
+                        >Опис</a>
                       </li>
                     </ul>
                     
@@ -153,11 +153,11 @@
                               <td>{{ product.attributes.brand }}</td>
                             </tr>
                             <tr v-if="product.attributes?.ram">
-                              <td class="font-weight-bold">Оперативная память</td>
+                              <td class="font-weight-bold">Оперативна пам’ять</td>
                               <td>{{ product.attributes.ram }}</td>
                             </tr>
                             <tr v-if="product.attributes?.storage">
-                              <td class="font-weight-bold">Накопитель</td>
+                              <td class="font-weight-bold">Накопичувач</td>
                               <td>{{ product.attributes.storage }}</td>
                             </tr>
                             <tr v-for="(val, key) in customSpecs" :key="key">
@@ -165,7 +165,7 @@
                               <td>{{ val }}</td>
                             </tr>
                             <tr v-if="!hasSpecs">
-                              <td colspan="2" class="text-center text-muted">Характеристики отсутствуют</td>
+                              <td colspan="2" class="text-center text-muted">Характеристики відсутні</td>
                             </tr>
                           </tbody>
                         </table>
@@ -175,10 +175,10 @@
                       <div v-if="activeTab === 'description'" class="tab-pane fade show active">
                         <div class="product-description-full text-muted">
                           <p>
-                            Оригинальный продукт {{ product.name_uk }}. Соответствует всем международным стандартам качества и комплектуется официальной гарантией.
+                            Оригінальний продукт {{ product.name_uk }}. Відповідає всім міжнародним стандартам якості та комплектується офіційною гарантією.
                           </p>
                           <p v-if="product.attributes?.external_link">
-                            Вы можете ознакомиться со всеми деталями, отзывами и обзорами на первоисточнике: 
+                            Ви можете ознайомитися з усіма деталями, відгуками та оглядами на першоджерелі: 
                             <a :href="product.attributes.external_link" target="_blank">{{ product.attributes.external_link }}</a>
                           </p>
                         </div>
@@ -194,7 +194,7 @@
           <!-- sidebar related products -->
           <div class="col-lg-3">
             <div class="related-products-sidebar p-3 border rounded bg-white shadow-sm">
-              <h5 class="border-bottom pb-2 mb-3">Похожие товары</h5>
+              <h5 class="border-bottom pb-2 mb-3">Схожі товари</h5>
               <div v-if="relatedProducts.length > 0" class="related-list">
                 <div v-for="rp in relatedProducts" :key="rp.id" class="related-item mb-4 pb-3 border-bottom">
                   <NuxtLink :to="`/product/${rp.id}`">
@@ -207,7 +207,7 @@
                 </div>
               </div>
               <div v-else class="text-muted text-center py-4">
-                Нет похожих товаров
+                Немає схожих товарів
               </div>
             </div>
           </div>
@@ -289,7 +289,7 @@ const { isInWishlist, toggleWishlist } = useWishlist();
 const handleAddToCart = () => {
   if (product.value) {
     addToCart(product.value, quantity.value);
-    alert('Товар добавлен в корзину!');
+    alert('Товар додано в кошик!');
   }
 };
 </script>

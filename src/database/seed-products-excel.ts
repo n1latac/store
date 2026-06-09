@@ -117,19 +117,19 @@ async function run() {
 
     // Helper list of standard demo images from the Oregon template to assign dynamically
     const demoImages = [
-      'assets/img/product/product-or-1.jpg',
-      'assets/img/product/product-or-2.jpg',
-      'assets/img/product/product-or-3.jpg',
-      'assets/img/product/product-or-4.jpg',
-      'assets/img/product/product-or-5.jpg',
-      'assets/img/product/product-or-6.jpg',
-      'assets/img/product/product-or-7.jpg',
-      'assets/img/product/product-or-8.jpg',
-      'assets/img/product/product-or-9.jpg',
-      'assets/img/product/product-or-10.jpg',
-      'assets/img/product/product-or-11.jpg',
-      'assets/img/product/product-or-12.jpg',
-      'assets/img/product/product-or-13.jpg',
+      '/assets/img/product/product-or-1.jpg',
+      '/assets/img/product/product-or-2.jpg',
+      '/assets/img/product/product-or-3.jpg',
+      '/assets/img/product/product-or-4.jpg',
+      '/assets/img/product/product-or-5.jpg',
+      '/assets/img/product/product-or-6.jpg',
+      '/assets/img/product/product-or-7.jpg',
+      '/assets/img/product/product-or-8.jpg',
+      '/assets/img/product/product-or-9.jpg',
+      '/assets/img/product/product-or-10.jpg',
+      '/assets/img/product/product-or-11.jpg',
+      '/assets/img/product/product-or-12.jpg',
+      '/assets/img/product/product-or-13.jpg',
     ];
 
     for (const row of rows) {

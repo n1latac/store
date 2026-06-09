@@ -3,8 +3,8 @@
     <!-- Header -->
     <div class="flex justify-between items-center bg-white dark:bg-gray-950 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Управление товарами</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Добавляйте товары, управляйте характеристиками и загружайте изображения</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Керування товарами</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Додавайте товари, керуйте характеристиками та завантажуйте зображення</p>
       </div>
       <UButton
         icon="i-lucide-plus"
@@ -13,13 +13,36 @@
         class="rounded-xl shadow-sm hover:scale-[1.02] transition-transform duration-200"
         @click="openCreateModal"
       >
-        Создать товар
+        Створити товар
       </UButton>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-gray-950 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+      <div class="w-full sm:max-w-xs">
+        <UInput
+          v-model="searchInput"
+          icon="i-lucide-search"
+          placeholder="Пошук за назвою..."
+          class="w-full"
+          size="md"
+        />
+      </div>
+      <div class="w-full sm:max-w-xs">
+        <USelect
+          v-model="selectedCategoryId"
+          :items="[{ label: 'Усі категорії', value: 'all' }, ...categoryItems]"
+          placeholder="Фільтр за категорією"
+          class="w-full"
+          size="md"
+        />
+      </div>
     </div>
 
     <!-- Table Card -->
     <UCard class="rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden" :ui="{ body: 'p-0' }">
-      <UTable :columns="columns" :data="products || []">
+      <div class="overflow-x-auto">
+        <UTable :columns="columns" :data="products || []">
         <!-- Image Preview Render -->
         <template #image-cell="{ row }">
           <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden flex items-center justify-center border border-gray-200 dark:border-gray-700">
@@ -49,11 +72,11 @@
 
         <!-- Attributes Render -->
         <template #attributes-cell="{ row }">
-          <div class="flex flex-wrap gap-1 max-w-[250px]">
+          <div class="flex flex-wrap gap-1 max-w-[200px] whitespace-normal break-all">
             <span
               v-for="(val, key) in row.original.attributes"
               :key="key"
-              class="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-md border border-gray-200 dark:border-gray-700"
+              class="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-md border border-gray-200 dark:border-gray-700 break-all whitespace-normal"
             >
               {{ key }}: {{ val }}
             </span>
@@ -86,41 +109,70 @@
           </div>
         </template>
       </UTable>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div v-if="totalPages > 1" class="flex justify-between items-center p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+          Показано {{ (currentPage - 1) * limit + 1 }} - {{ Math.min(currentPage * limit, totalItems) }} з {{ totalItems }}
+        </span>
+        <div class="flex items-center gap-2">
+          <UButton
+            icon="i-lucide-chevron-left"
+            variant="outline"
+            color="neutral"
+            size="sm"
+            :disabled="currentPage === 1"
+            @click="currentPage--"
+          />
+          <span class="px-3 py-1 text-sm bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg text-gray-700 dark:text-gray-300 font-medium">
+            Сторінка {{ currentPage }} з {{ totalPages }}
+          </span>
+          <UButton
+            icon="i-lucide-chevron-right"
+            variant="outline"
+            color="neutral"
+            size="sm"
+            :disabled="currentPage === totalPages"
+            @click="currentPage++"
+          />
+        </div>
+      </div>
 
       <!-- Empty State -->
       <div v-if="!products?.length && status !== 'pending'" class="flex flex-col items-center justify-center py-12 px-4 text-center">
         <UIcon name="i-lucide-shopping-bag" class="w-12 h-12 text-gray-300 dark:text-gray-700 mb-3" />
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Нет товаров</h3>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Немає товарів</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm mt-1">
-          База данных товаров пуста. Нажмите кнопку выше, чтобы добавить первый товар.
+          База даних товарів порожня. Натисніть кнопку вище, щоб додати перший товар.
         </p>
       </div>
     </UCard>
 
     <!-- Create / Edit Product Modal -->
-    <UModal v-model:open="isOpen" :title="editId ? 'Редактировать товар' : 'Создать товар'" :description="editId ? 'Измените параметры товара и отредактируйте галерею' : 'Укажите параметры товара и загрузите фотографии'">
+    <UModal v-model:open="isOpen" :title="editId ? 'Редагувати товар' : 'Створити товар'" :description="editId ? 'Змініть параметри товару та відредагуйте галерею' : 'Вкажіть параметри товару та завантажте фотографії'">
       <template #body>
         <UForm :state="formState" class="space-y-4" @submit="onSubmit">
           <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Название (UA)" name="name_uk" required>
-              <UInput v-model="formState.name_uk" placeholder="Например: Кросівки Nike" class="w-full" size="md" />
+            <UFormField label="Назва (UA)" name="name_uk" required>
+              <UInput v-model="formState.name_uk" placeholder="Наприклад: Кросівки Nike" class="w-full" size="md" />
             </UFormField>
 
-            <UFormField label="Название (EN)" name="name_en" required>
-              <UInput v-model="formState.name_en" placeholder="Например: Nike Sneakers" class="w-full" size="md" />
+            <UFormField label="Назва (EN)" name="name_en" required>
+              <UInput v-model="formState.name_en" placeholder="Наприклад: Nike Sneakers" class="w-full" size="md" />
             </UFormField>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Цена (грн)" name="price" required>
+            <UFormField label="Ціна (грн)" name="price" required>
               <UInput v-model.number="formState.price" type="number" placeholder="2500" class="w-full" size="md" />
             </UFormField>
 
-            <UFormField label="Категория" name="category_id" required>
+            <UFormField label="Категорія" name="category_id" required>
               <USelect
                 v-model="formState.category_id"
                 :items="categoryItems"
-                placeholder="Выберите категорию"
+                placeholder="Оберіть категорію"
                 class="w-full"
                 size="md"
               />
@@ -130,12 +182,12 @@
           <!-- Dynamic Attributes (Характеристики) -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Характеристики (Спецификации)
+              Характеристики (Специфікації)
             </label>
             <div class="space-y-2">
               <div v-for="(attr, index) in dynamicAttrs" :key="index" class="flex items-center gap-2">
-                <UInput v-model="attr.key" placeholder="Название (напр. Цвет)" class="flex-1" size="sm" />
-                <UInput v-model="attr.value" placeholder="Значение (напр. Черный)" class="flex-1" size="sm" />
+                <UInput v-model="attr.key" placeholder="Назва (напр. Колір)" class="flex-1" size="sm" />
+                <UInput v-model="attr.value" placeholder="Значення (напр. Чорний)" class="flex-1" size="sm" />
                 <UButton icon="i-lucide-x" color="error" variant="ghost" size="sm" @click="removeAttributeRow(index)" />
               </div>
               <UButton
@@ -146,7 +198,7 @@
                 class="mt-1"
                 @click="addAttributeRow"
               >
-                Добавить характеристику
+                Додати характеристику
               </UButton>
             </div>
           </div>
@@ -154,7 +206,7 @@
           <!-- Existing Images Gallery (Only shown in Edit mode) -->
           <div v-if="editId && currentImages.length" class="mb-4">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Текущие изображения товара
+              Поточні зображення товару
             </label>
             <div class="grid grid-cols-5 gap-3">
               <div
@@ -181,7 +233,7 @@
           <!-- Drag & Drop Upload Zone -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Изображения товара (Drag & Drop)
+              Зображення товару (Drag & Drop)
             </label>
             
             <!-- Upload Box -->
@@ -203,9 +255,9 @@
               />
               <UIcon name="i-lucide-upload-cloud" class="w-10 h-10 text-gray-400 mx-auto mb-2" />
               <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Перетащите сюда файлы картинок или кликните для выбора
+                Перетягніть сюди файли зображень або клікніть для вибору
               </p>
-              <p class="text-xs text-gray-400 mt-1">Допускаются файлы JPG, PNG, WEBP (до 10 штук)</p>
+              <p class="text-xs text-gray-400 mt-1">Допускаються файли JPG, PNG, WEBP (до 10 штук)</p>
             </div>
 
             <!-- Preview Images Grid -->
@@ -232,10 +284,10 @@
           <!-- Form Actions -->
           <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
             <UButton variant="ghost" color="neutral" @click="isOpen = false">
-              Отмена
+              Скасувати
             </UButton>
             <UButton type="submit" color="primary" :loading="submitting">
-              {{ editId ? 'Сохранить изменения' : 'Создать и загрузить фото' }}
+              {{ editId ? 'Зберегти зміни' : 'Створити та завантажити фото' }}
             </UButton>
           </div>
         </UForm>
@@ -245,7 +297,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 
 definePageMeta({
   layout: 'admin',
@@ -255,19 +307,72 @@ const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 const toast = useToast();
 
+// Pagination, search & filter state
+const searchInput = ref('');
+const searchQuery = ref('');
+const selectedCategoryId = ref('all');
+const currentPage = ref(1);
+const limit = ref(10);
+
+let searchDebounce: any = null;
+watch(searchInput, (newVal) => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => {
+    searchQuery.value = newVal;
+  }, 300);
+});
+
+watch([searchQuery, selectedCategoryId], () => {
+  currentPage.value = 1;
+});
+
+const queryParams = computed(() => {
+  const params: any = {
+    page: currentPage.value,
+    limit: limit.value,
+  };
+  if (searchQuery.value.trim()) {
+    params.search = searchQuery.value.trim();
+  }
+  if (selectedCategoryId.value && selectedCategoryId.value !== 'all') {
+    params.category_id = selectedCategoryId.value;
+  }
+  return params;
+});
+
 // Fetch products & categories
-const { data: products, refresh, status } = await useFetch<any[]>(`${apiBase}/products`);
+const { data: productsData, refresh, status } = await useFetch<any>(`${apiBase}/products`, {
+  query: queryParams,
+});
 const { data: categories } = await useFetch<any[]>(`${apiBase}/categories`);
+
+const products = computed<any[]>(() => {
+  if (!productsData.value) return [];
+  if (productsData.value.rows) {
+    return productsData.value.rows;
+  }
+  return Array.isArray(productsData.value) ? productsData.value : [];
+});
+
+const totalItems = computed(() => {
+  if (!productsData.value) return 0;
+  if (productsData.value.count !== undefined) {
+    return productsData.value.count;
+  }
+  return productsData.value.length;
+});
+
+const totalPages = computed(() => Math.ceil(totalItems.value / limit.value));
 
 const columns = [
   { accessorKey: 'id', header: 'ID' },
   { id: 'image', header: 'Фото' },
-  { accessorKey: 'name_uk', header: 'Название (UA)' },
-  { accessorKey: 'name_en', header: 'Название (EN)' },
-  { accessorKey: 'category', header: 'Категория' },
-  { accessorKey: 'price', header: 'Цена' },
+  { accessorKey: 'name_uk', header: 'Назва (UA)' },
+  { accessorKey: 'name_en', header: 'Назва (EN)' },
+  { accessorKey: 'category', header: 'Категорія' },
+  { accessorKey: 'price', header: 'Ціна' },
   { accessorKey: 'attributes', header: 'Характеристики' },
-  { id: 'actions', header: 'Действия' },
+  { id: 'actions', header: 'Дії' },
 ];
 
 // Modal / Form state
@@ -304,7 +409,7 @@ const categoryItems = computed(() => {
 
 // Helper formatting
 const formatPrice = (price: string | number) => {
-  return Number(price).toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  return Number(price).toLocaleString('uk-UA', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 };
 
 const getProductImage = (product: any) => {
@@ -391,7 +496,7 @@ const openEditModal = (product: any) => {
 
 // Delete existing product image immediately
 const deleteExistingImage = async (imageId: number) => {
-  if (!confirm('Вы уверены, что хотите удалить это изображение?')) return;
+  if (!confirm('Ви впевнені, що хочете видалити це зображення?')) return;
   deletingImageId.value = imageId;
 
   try {
@@ -409,8 +514,8 @@ const deleteExistingImage = async (imageId: number) => {
     }
 
     toast.add({
-      title: 'Успешно',
-      description: 'Изображение удалено',
+      title: 'Успішно',
+      description: 'Зображення видалено',
       color: 'success',
     });
 
@@ -419,7 +524,7 @@ const deleteExistingImage = async (imageId: number) => {
     console.error(error);
     const msg = error.data?.message || 'Не удалось удалить изображение';
     toast.add({
-      title: 'Ошибка',
+      title: 'Помилка',
       description: msg,
       color: 'error',
     });
@@ -431,7 +536,7 @@ const deleteExistingImage = async (imageId: number) => {
 // Submit product (Create or Edit)
 const onSubmit = async () => {
   if (!formState.name_uk || !formState.price || !formState.category_id) {
-    toast.add({ title: 'Ошибка', description: 'Пожалуйста, заполните все обязательные поля', color: 'error' });
+    toast.add({ title: 'Помилка', description: 'Будь ласка, заповніть усі обов’язкові поля', color: 'error' });
     return;
   }
 
@@ -495,8 +600,8 @@ const onSubmit = async () => {
     }
 
     toast.add({
-      title: 'Успешно',
-      description: editId.value ? 'Товар сохранен' : 'Товар создан и фото загружены',
+      title: 'Успішно',
+      description: editId.value ? 'Товар збережено' : 'Товар створено та photo завантажено',
       color: 'success',
     });
 
@@ -504,9 +609,9 @@ const onSubmit = async () => {
     await refresh();
   } catch (error: any) {
     console.error(error);
-    const msg = error.data?.message || 'Не удалось сохранить товар';
+    const msg = error.data?.message || 'Не вдалося зберегти товар';
     toast.add({
-      title: 'Ошибка',
+      title: 'Помилка',
       description: Array.isArray(msg) ? msg.join(', ') : msg,
       color: 'error',
     });
@@ -517,7 +622,7 @@ const onSubmit = async () => {
 
 // Delete product
 const deleteProduct = async (id: number) => {
-  if (!confirm('Вы уверены, что хотите удалить этот товар?')) return;
+  if (!confirm('Ви впевнені, що хочете видалити цей товар?')) return;
   deletingId.value = id;
 
   try {
@@ -530,17 +635,17 @@ const deleteProduct = async (id: number) => {
     });
 
     toast.add({
-      title: 'Успешно',
-      description: 'Товар удален',
+      title: 'Успішно',
+      description: 'Товар видалено',
       color: 'success',
     });
 
     await refresh();
   } catch (error: any) {
     console.error(error);
-    const msg = error.data?.message || 'Не удалось удалить товар';
+    const msg = error.data?.message || 'Не вдалося видалити товар';
     toast.add({
-      title: 'Ошибка',
+      title: 'Помилка',
       description: Array.isArray(msg) ? msg.join(', ') : msg,
       color: 'error',
     });

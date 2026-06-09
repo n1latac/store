@@ -34,7 +34,7 @@
           icon="i-lucide-log-out"
           @click="onLogout"
         >
-          Выйти
+          Вийти
         </UButton>
       </div>
     </aside>
@@ -53,12 +53,12 @@ const router = useRouter();
 const navItems = [
   [
     {
-      label: 'Категории',
+      label: 'Категорії',
       icon: 'i-lucide-folder',
       to: '/admin/categories',
     },
     {
-      label: 'Товары',
+      label: 'Товари',
       icon: 'i-lucide-shopping-bag',
       to: '/admin/products',
     }
