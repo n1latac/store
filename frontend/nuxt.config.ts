@@ -5,6 +5,31 @@ export default defineNuxtConfig({
     '@nuxt/ui'
   ],
 
+  icon: {
+    clientBundle: {
+      scan: true,
+      icons: [
+        'lucide:arrow-left',
+        'lucide:log-out',
+        'lucide:plus',
+        'lucide:pencil',
+        'lucide:trash-2',
+        'lucide:folder-open',
+        'lucide:folder',
+        'lucide:search',
+        'lucide:image',
+        'lucide:chevron-left',
+        'lucide:chevron-right',
+        'lucide:shopping-bag',
+        'lucide:x',
+        'lucide:upload-cloud',
+        'lucide:user',
+        'lucide:lock',
+        'lucide:chevron-down'
+      ]
+    }
+  },
+
   devtools: {
     enabled: true
   },
