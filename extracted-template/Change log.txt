@@ -1,4 +1,0 @@
-Version: 2.1.0 ----------Date: 29-12-2022
-=========================================
-01. Updated to Bootstrap 5.2.3
-02. Minor css issue fixed
