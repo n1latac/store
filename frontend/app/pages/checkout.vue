@@ -7,10 +7,11 @@
           <div class="col-12">
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
+                <h1>{{ t('checkout') }}</h1>
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><NuxtLink to="/">Головна</NuxtLink></li>
-                  <li class="breadcrumb-item"><NuxtLink to="/cart">Кошик</NuxtLink></li>
-                  <li class="breadcrumb-item active" aria-current="page">Оформлення замовлення</li>
+                  <li class="breadcrumb-item"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
+                  <li class="breadcrumb-item"><NuxtLink to="/cart">{{ t('cart') }}</NuxtLink></li>
+                  <li class="breadcrumb-item active" aria-current="page">{{ t('checkout') }}</li>
                 </ul>
               </nav>
             </div>
@@ -21,49 +22,49 @@
     <!-- breadcrumb area end -->
 
     <!-- checkout main wrapper start -->
-    <div class="checkout-page-wrapper section-space">
+    <div class="checkout-page-wrapper pt-50 pb-50">
       <div class="container">
         <div v-if="cartItems.length > 0" class="row">
           <!-- Billing Details -->
           <div class="col-lg-6">
             <div class="checkout-billing-details-wrap bg-white p-4 rounded shadow-sm">
-              <h4 class="checkout-title border-bottom pb-2 mb-4">Дані для доставки</h4>
+              <h4 class="checkout-title border-bottom pb-2 mb-4">{{ t('checkoutTitle') }}</h4>
               <form @submit.prevent="handlePlaceOrder">
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label class="font-weight-bold">Ім’я</label>
-                    <input type="text" v-model="form.firstName" class="form-control" placeholder="Ім’я">
+                    <label class="font-weight-bold">{{ t('firstName') }}</label>
+                    <input type="text" v-model="form.firstName" class="form-control" :placeholder="t('firstName')">
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label class="font-weight-bold">Прізвище</label>
-                    <input type="text" v-model="form.lastName" class="form-control" placeholder="Прізвище">
+                    <label class="font-weight-bold">{{ t('lastName') }}</label>
+                    <input type="text" v-model="form.lastName" class="form-control" :placeholder="t('lastName')">
                   </div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="font-weight-bold">Телефон <span class="text-danger">*</span></label>
+                  <label class="font-weight-bold">{{ t('phone') }} <span class="text-danger">*</span></label>
                   <input type="tel" v-model="form.phone" class="form-control" required placeholder="+380...">
                 </div>
 
                 <div class="mb-3">
-                  <label class="font-weight-bold">Email</label>
+                  <label class="font-weight-bold">{{ t('email') }}</label>
                   <input type="email" v-model="form.email" class="form-control" placeholder="example@mail.com">
                 </div>
 
                 <div class="row">
                   <div class="col-md-7 mb-3">
-                    <label class="font-weight-bold">Місто</label>
-                    <input type="text" v-model="form.city" class="form-control" placeholder="Київ, Львів...">
+                    <label class="font-weight-bold">{{ t('city') }}</label>
+                    <input type="text" v-model="form.city" class="form-control" :placeholder="locale === 'uk' ? 'Київ, Львів...' : 'Kyiv, Lviv...'">
                   </div>
                   <div class="col-md-5 mb-3">
-                    <label class="font-weight-bold">Відділення НП</label>
-                    <input type="text" v-model="form.warehouse" class="form-control" placeholder="№1, №15...">
+                    <label class="font-weight-bold">{{ t('warehouse') }}</label>
+                    <input type="text" v-model="form.warehouse" class="form-control" :placeholder="locale === 'uk' ? '№1, №15...' : 'No. 1, No. 15...'">
                   </div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="font-weight-bold">Примітки до замовлення (необов’язково)</label>
-                  <textarea v-model="form.notes" class="form-control" rows="4" placeholder="Особливі побажання до доставки або пакування"></textarea>
+                  <label class="font-weight-bold">{{ t('notes') }}</label>
+                  <textarea v-model="form.notes" class="form-control" rows="4" :placeholder="t('notesPlaceholder')"></textarea>
                 </div>
 
                 <button type="submit" id="submit-order-btn" class="d-none"></button>
@@ -74,21 +75,21 @@
           <!-- Order Summary -->
           <div class="col-lg-6">
             <div class="order-summary-details bg-white p-4 rounded shadow-sm mt-md-30">
-              <h4 class="checkout-title border-bottom pb-2 mb-4">Ваше замовлення</h4>
+              <h4 class="checkout-title border-bottom pb-2 mb-4">{{ t('yourOrder') }}</h4>
               <div class="order-summary-content">
                 <!-- Order Summary Table -->
                 <div class="order-summary-table table-responsive text-center">
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th>Товар</th>
-                        <th>Всього</th>
+                        <th>{{ t('product') }}</th>
+                        <th>{{ t('total') }}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="item in cartItems" :key="item.id">
                         <td>
-                          <NuxtLink :to="`/product/${item.id}`" class="text-dark font-weight-bold">{{ item.name }}</NuxtLink>
+                          <NuxtLink :to="`/product/${item.id}`" class="text-dark font-weight-bold">{{ locale === 'uk' ? (item.name_uk || item.name) : (item.name_en || item.name_uk || item.name) }}</NuxtLink>
                           <strong> × {{ item.quantity }}</strong>
                         </td>
                         <td>{{ item.price * item.quantity }} ₴</td>
@@ -96,15 +97,15 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td class="font-weight-bold">Товари</td>
+                        <td class="font-weight-bold">{{ locale === 'uk' ? 'Товари' : 'Subtotal' }}</td>
                         <td>{{ cartTotal }} ₴</td>
                       </tr>
                       <tr>
-                        <td class="font-weight-bold">Доставка</td>
-                        <td class="text-success font-weight-bold">Безкоштовно</td>
+                        <td class="font-weight-bold">{{ t('shipping') }}</td>
+                        <td class="text-success font-weight-bold">{{ t('freeShipping') }}</td>
                       </tr>
                       <tr class="h5">
-                        <td class="font-weight-bold">Разом до сплати</td>
+                        <td class="font-weight-bold">{{ locale === 'uk' ? 'Разом до сплати' : 'Total Payment' }}</td>
                         <td class="text-success font-weight-bold">{{ cartTotal }} ₴</td>
                       </tr>
                     </tfoot>
@@ -118,10 +119,10 @@
                     type="button" 
                     @click="triggerSubmit" 
                     :disabled="orderSubmitting"
-                    class="btn btn-secondary w-100 font-weight-bold" 
-                    style="background-color: #00DC82; border: none; padding: 14px;"
+                    class="btn btn__bg w-100 font-weight-bold" 
+                    style="padding: 14px;"
                   >
-                    {{ orderSubmitting ? 'Оформлення замовлення...' : 'Підтвердити замовлення' }}
+                    {{ orderSubmitting ? t('placingOrder') : t('confirmOrder') }}
                   </button>
                 </div>
               </div>
@@ -134,12 +135,12 @@
           <div class="success-icon mb-4" style="font-size: 64px; color: #00DC82;">
             <i class="ion-checkmark-circled"></i>
           </div>
-          <h2 class="text-success">Замовлення успішно оформлено!</h2>
+          <h2 class="text-success">{{ t('orderSuccess') }}</h2>
           <p class="text-muted mt-2">
-            Дякуємо за покупку в магазині Aivix tech. Наші менеджери зв’яжуться з вами найближчим часом для підтвердження.
+            {{ t('orderSuccessText') }}
           </p>
-          <NuxtLink to="/shop" class="btn btn-secondary text-white font-weight-bold mt-4" style="background-color: #00DC82; border: none; padding: 12px 30px;">
-            Продовжити покупки
+          <NuxtLink to="/shop" class="btn btn__bg mt-4" style="padding: 12px 30px;">
+            {{ t('continueShopping') }}
           </NuxtLink>
         </div>
 
@@ -148,10 +149,10 @@
           <div class="empty-cart-icon mb-4" style="font-size: 64px; color: #ccc;">
             <i class="ion-bag"></i>
           </div>
-          <h3>Кошик порожній</h3>
-          <p class="text-muted mt-2">Для оформлення замовлення додайте хоча б один товар у кошик.</p>
-          <NuxtLink to="/shop" class="btn btn-secondary text-white font-weight-bold mt-4" style="background-color: #00DC82; border: none; padding: 12px 30px;">
-            До каталогу товарів
+          <h3>{{ t('cartEmpty') }}</h3>
+          <p class="text-muted mt-2">{{ t('cartEmptyDesc') }}</p>
+          <NuxtLink to="/shop" class="btn btn__bg mt-4" style="padding: 12px 30px;">
+            {{ t('toCatalog') }}
           </NuxtLink>
         </div>
       </div>
@@ -163,11 +164,13 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useCart } from '~/composables/useCart';
+import { useLocale } from '~/composables/useLocale';
 
 definePageMeta({
   layout: 'default'
 });
 
+const { locale, t } = useLocale();
 const { cartItems, cartTotal, clearCart } = useCart();
 
 const orderPlaced = ref(false);
@@ -225,11 +228,11 @@ const handlePlaceOrder = async () => {
       // Show success view
       orderPlaced.value = true;
     } else {
-      alert(response?.message || 'Не вдалося надіслати замовлення. Спробуйте пізніше.');
+      alert(response?.message || (locale.value === 'uk' ? 'Не вдалося надіслати замовлення. Спробуйте пізніше.' : 'Failed to place the order. Please try again later.'));
     }
   } catch (error: any) {
     console.error(error);
-    const msg = error.data?.message || 'Помилка при оформленні замовлення.';
+    const msg = error.data?.message || (locale.value === 'uk' ? 'Помилка при оформленні замовлення.' : 'Error placing the order.');
     alert(Array.isArray(msg) ? msg.join(', ') : msg);
   } finally {
     orderSubmitting.value = false;

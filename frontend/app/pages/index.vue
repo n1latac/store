@@ -5,7 +5,7 @@
       <section class="slider-area position-relative">
         <div class="hero-slider-active-wrapper">
           <div 
-            class="hero-slider-item" 
+            class="hero-slider-item slick-current" 
             :style="{ 
               backgroundImage: `url(${activeSlide.bg})`, 
               display: 'block',
@@ -17,10 +17,10 @@
               <div class="row align-items-center h-100">
                 <div class="col-md-10">
                   <div class="hero-slider-content text-left">
-                    <h2 class="animated fadeInDown">{{ activeSlide.subtitle }}</h2>
-                    <h1 class="animated fadeInUp">{{ activeSlide.title }}</h1>
-                    <h3 class="animated fadeInUp">{{ activeSlide.desc }}</h3>
-                    <NuxtLink to="/shop" class="btn-hero animated fadeInUp">Купити зараз</NuxtLink>
+                    <h2>{{ activeSlide.subtitle }}</h2>
+                    <h1>{{ activeSlide.title }}</h1>
+                    <h3>{{ activeSlide.desc }}</h3>
+                    <NuxtLink to="/shop" class="btn-hero">{{ locale === 'uk' ? 'Купити зараз' : 'Buy Now' }}</NuxtLink>
                   </div>
                 </div>
               </div>
@@ -38,42 +38,42 @@
       <!-- slider area end -->
 
       <!-- service features start -->
-      <section class="service-policy-area section-space">
+      <section class="service-features pt-50">
         <div class="container">
-          <div class="service-policy-inner">
+          <div class="service-features-inner bg-white">
             <div class="row">
               <div class="col-lg-4 col-md-4">
-                <div class="single-policy-item">
-                  <div class="policy-icon">
-                    <i class="ion-android-plane"></i>
+                <div class="single-features-item">
+                  <div class="features-icon">
+                    <i class="ion-paper-airplane"></i>
                   </div>
-                  <div class="policy-content">
-                    <h5>Швидка доставка</h5>
-                    <p>По всій Україні Новою Поштою</p>
+                  <div class="features-content">
+                    <h5>{{ locale === 'uk' ? 'Швидка доставка' : 'Fast Delivery' }}</h5>
+                    <p>{{ locale === 'uk' ? 'По всій Україні Новою Поштою' : 'All over Ukraine via Nova Poshta' }}</p>
                   </div>
                 </div>
               </div>
 
               <div class="col-lg-4 col-md-4">
-                <div class="single-policy-item">
-                  <div class="policy-icon">
+                <div class="single-features-item">
+                  <div class="features-icon">
                     <i class="ion-help-buoy"></i>
                   </div>
-                  <div class="policy-content">
-                    <h5>Підтримка 24/7</h5>
-                    <p>Наші менеджери завжди на зв’язку</p>
+                  <div class="features-content">
+                    <h5>{{ locale === 'uk' ? 'Підтримка 24/7' : 'Support 24/7' }}</h5>
+                    <p>{{ locale === 'uk' ? 'Наші менеджери завжди на зв’язку' : 'Our managers are always online' }}</p>
                   </div>
                 </div>
               </div>
 
               <div class="col-lg-4 col-md-4">
-                <div class="single-policy-item">
-                  <div class="policy-icon">
+                <div class="single-features-item">
+                  <div class="features-icon">
                     <i class="ion-lock-combination"></i>
                   </div>
-                  <div class="policy-content">
-                    <h5>Безпечна оплата</h5>
-                    <p>100% захист ваших платежів</p>
+                  <div class="features-content">
+                    <h5>{{ locale === 'uk' ? 'Безпечна оплата' : 'Secure Payment' }}</h5>
+                    <p>{{ locale === 'uk' ? '100% захист ваших платежів' : '100% protected payments' }}</p>
                   </div>
                 </div>
               </div>
@@ -83,98 +83,66 @@
       </section>
       <!-- service features end -->
 
-      <!-- banner statistics start -->
-      <section class="banner-statistics-area">
+      <!-- deals area start -->
+      <section class="deals-area pt-50" v-if="dealsProducts.length > 0">
         <div class="container">
-          <div class="row row-10 mtn-20">
-            <div class="col-md-6">
-              <div class="img-container mt-20">
-                <NuxtLink to="/shop">
-                  <img src="/assets/img/banner/img1_home.jpg" alt="Banner 1" class="img-fluid w-100 rounded">
-                </NuxtLink>
+          <div class="deals-wrapper bg-white">
+            <div class="row">
+              <div class="col-12">
+                <div class="section-header-deals">
+                  <div class="section-title-deals">
+                    <h4>{{ locale === 'uk' ? 'Пропозиції тижня' : 'Deals Of The Week' }}</h4>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="img-container mt-20">
-                <NuxtLink to="/shop">
-                  <img src="/assets/img/banner/img2_home.jpg" alt="Banner 2" class="img-fluid w-100 rounded">
-                </NuxtLink>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- banner statistics end -->
-
-      <!-- product section start -->
-      <section class="our-product-area section-space">
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <div class="section-title text-center">
-                <h2>Наші товари</h2>
-                <p>Подивіться новинки та популярні пропозиції з каталогу</p>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <!-- Tab Navigation -->
-              <div class="product-tab-menu text-center">
-                <ul class="nav justify-content-center">
-                  <li>
-                    <a 
-                      href="#" 
-                      :class="{ active: activeTab === 'new' }" 
-                      @click.prevent="activeTab = 'new'"
-                    >Нові надходження</a>
-                  </li>
-                  <li>
-                    <a 
-                      href="#" 
-                      :class="{ active: activeTab === 'featured' }" 
-                      @click.prevent="activeTab = 'featured'"
-                    >Популярні</a>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Tab Content -->
-              <div class="product-tab-content">
-                <div class="row">
-                  <div 
-                    v-for="product in filteredProducts" 
-                    :key="product.id" 
-                    class="col-xl-3 col-lg-4 col-md-6 col-sm-6"
-                  >
-                    <div class="product-item mt-30">
-                      <div class="product-thumb">
-                        <NuxtLink :to="`/product/${product.id}`">
-                          <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" class="product-img">
-                        </NuxtLink>
-                        <div class="button-group">
-                          <a 
-                            href="#" 
-                            @click.prevent="toggleWishlist(product)" 
-                            :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
-                          >
-                            <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
-                          </a>
-                          <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-android-eye"></i></NuxtLink>
+            <div class="row">
+              <div class="col-12">
+                <div class="deals-item-wrapper">
+                  <div class="row row-15">
+                    <div 
+                      v-for="product in dealsProducts" 
+                      :key="product.id" 
+                      class="col-xl-3 col-lg-4 col-sm-6 mb-4"
+                    >
+                      <div class="deals-item">
+                        <div class="deals-thumb">
+                          <NuxtLink :to="`/product/${product.id}`">
+                            <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" class="product-img">
+                          </NuxtLink>
+                          <div class="add-to-links">
+                            <a 
+                              href="#" 
+                              @click.prevent="toggleWishlist(product)" 
+                              :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
+                            >
+                              <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
+                            </a>
+                            <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-eye"></i></NuxtLink>
+                          </div>
                         </div>
-                      </div>
-                      <div class="product-content">
-                        <div class="product-category">
-                          <NuxtLink :to="`/shop?category=${product.category_id}`">{{ product.category?.name_uk }}</NuxtLink>
-                        </div>
-                        <h5 class="product-name">
-                          <NuxtLink :to="`/product/${product.id}`">{{ product.name_uk }}</NuxtLink>
-                        </h5>
-                        <div class="price-box">
-                          <span class="regular-price">{{ product.price }} ₴</span>
-                        </div>
-                        <div class="product-action-link">
-                          <a href="#" @click.prevent="addToCart(product)" class="btn-add-cart">В кошик</a>
+                        <div class="deals-content">
+                          <div class="ratings">
+                            <span><i class="ion-android-star text-warning"></i></span>
+                            <span><i class="ion-android-star text-warning"></i></span>
+                            <span><i class="ion-android-star text-warning"></i></span>
+                            <span><i class="ion-android-star text-warning"></i></span>
+                            <span><i class="ion-android-star text-warning"></i></span>
+                          </div>
+                          <h4 class="product-name">
+                            <NuxtLink :to="`/product/${product.id}`">
+                              {{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}
+                            </NuxtLink>
+                          </h4>
+                          <div class="price-box">
+                            <span class="price-regular">{{ product.price }} ₴</span>
+                            <span class="price-old"><del>{{ getOldPrice(product.price) }} ₴</del></span>
+                          </div>
+                          <a class="btn btn-cart mt-2" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
+                          <div class="product-countdown mt-2 font-weight-bold text-info" style="font-size: 13px;">
+                            <i class="ion-android-alarm-clock mr-1"></i>
+                            {{ locale === 'uk' ? 'Акція діє до кінця тижня' : 'Sale ends this week' }}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -185,7 +153,423 @@
           </div>
         </div>
       </section>
-      <!-- product section end -->
+      <!-- deals area end -->
+
+      <!-- banner statistics start -->
+      <div class="banner-statistics-area pt-50">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="img-container">
+                <NuxtLink to="/shop">
+                  <img src="/assets/img/banner/img1_home.jpg" alt="Banner 1" class="w-100 rounded">
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- banner statistics end -->
+
+      <!-- features categories area start 1 (Personal Computers) -->
+      <section class="features-categories-area pt-50" v-if="catComputers">
+        <div class="container">
+          <div class="section-wrapper bg-white">
+            <div class="row">
+              <div class="col-12">
+                <div class="section-header">
+                  <!-- section title start -->
+                  <div class="section-title">
+                    <h4>{{ locale === 'uk' ? catComputers.name_uk : (catComputers.name_en || catComputers.name_uk) }}</h4>
+                  </div>
+                  <!-- section title start -->
+
+                  <!-- product tab menu start -->
+                  <div class="feature-menu">
+                    <ul class="nav justify-content-start justify-content-lg-end">
+                      <li>
+                        <a 
+                          href="#" 
+                          :class="{ active: activeCatTab1 === 'all' }" 
+                          @click.prevent="activeCatTab1 = 'all'"
+                        >{{ locale === 'uk' ? 'Усі товари' : 'All Products' }}</a>
+                      </li>
+                      <li v-for="sub in subCatsComputers" :key="sub.id">
+                        <a 
+                          href="#" 
+                          :class="{ active: activeCatTab1 === sub.id }" 
+                          @click.prevent="activeCatTab1 = sub.id"
+                        >{{ locale === 'uk' ? sub.name_uk : (sub.name_en || sub.name_uk) }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- product tab menu start -->
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="products-area-wrapper mt-30">
+                  <div class="row" v-if="productsCat1.length > 0">
+                    <div 
+                      v-for="product in productsCat1" 
+                      :key="product.id" 
+                      class="col-lg-4 col-sm-6"
+                    >
+                      <!-- Product Card -->
+                      <div class="product-item">
+                        <div class="product-thumb">
+                          <NuxtLink :to="`/product/${product.id}`">
+                            <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" class="product-img">
+                          </NuxtLink>
+                          <div class="add-to-links">
+                            <a 
+                              href="#" 
+                              @click.prevent="toggleWishlist(product)" 
+                              :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
+                            >
+                              <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
+                            </a>
+                            <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-eye"></i></NuxtLink>
+                          </div>
+                        </div>
+                        <div class="product-content">
+                          <div class="product-category">
+                            <NuxtLink :to="`/shop?category=${product.category_id}`">{{ locale === 'uk' ? product.category?.name_uk : (product.category?.name_en || product.category?.name_uk) }}</NuxtLink>
+                          </div>
+                          <h5 class="product-name">
+                            <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
+                          </h5>
+                          <div class="price-box">
+                            <span class="price-regular">{{ product.price }} ₴</span>
+                          </div>
+                          <div class="product-item-action">
+                            <a class="btn btn-cart" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="text-center py-5 text-muted">
+                    {{ locale === 'uk' ? 'Товарів не знайдено' : 'No products found' }}
+                  </div>
+                  <!-- bottom banner -->
+                  <div class="img-container mt-30">
+                    <NuxtLink to="/shop">
+                      <img src="/assets/img/banner/ca1_bottom.jpg" alt="" class="w-100 rounded">
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="section-banner mt-30">
+                  <NuxtLink to="/shop">
+                    <img src="/assets/img/banner/ca1.jpg" alt="" class="w-100 rounded">
+                  </NuxtLink>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- features categories area end 1 -->
+
+      <!-- features categories area start 2 (Laptops) -->
+      <section class="features-categories-area pt-50" v-if="catLaptops">
+        <div class="container">
+          <div class="section-wrapper bg-white">
+            <div class="row">
+              <div class="col-12">
+                <div class="section-header">
+                  <!-- section title start -->
+                  <div class="section-title">
+                    <h4>{{ locale === 'uk' ? catLaptops.name_uk : (catLaptops.name_en || catLaptops.name_uk) }}</h4>
+                  </div>
+                  <!-- section title start -->
+
+                  <!-- product tab menu start -->
+                  <div class="feature-menu">
+                    <ul class="nav justify-content-start justify-content-lg-end">
+                      <li>
+                        <a 
+                          href="#" 
+                          :class="{ active: activeCatTab2 === 'all' }" 
+                          @click.prevent="activeCatTab2 = 'all'"
+                        >{{ locale === 'uk' ? 'Усі товари' : 'All Products' }}</a>
+                      </li>
+                      <li v-for="sub in subCatsLaptops" :key="sub.id">
+                        <a 
+                          href="#" 
+                          :class="{ active: activeCatTab2 === sub.id }" 
+                          @click.prevent="activeCatTab2 = sub.id"
+                        >{{ locale === 'uk' ? sub.name_uk : (sub.name_en || sub.name_uk) }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- product tab menu start -->
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="products-area-wrapper mt-30">
+                  <div class="row" v-if="productsCat2.length > 0">
+                    <div 
+                      v-for="product in productsCat2" 
+                      :key="product.id" 
+                      class="col-lg-4 col-sm-6"
+                    >
+                      <!-- Product Card -->
+                      <div class="product-item">
+                        <div class="product-thumb">
+                          <NuxtLink :to="`/product/${product.id}`">
+                            <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" class="product-img">
+                          </NuxtLink>
+                          <div class="add-to-links">
+                            <a 
+                              href="#" 
+                              @click.prevent="toggleWishlist(product)" 
+                              :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
+                            >
+                              <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
+                            </a>
+                            <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-eye"></i></NuxtLink>
+                          </div>
+                        </div>
+                        <div class="product-content">
+                          <div class="product-category">
+                            <NuxtLink :to="`/shop?category=${product.category_id}`">{{ locale === 'uk' ? product.category?.name_uk : (product.category?.name_en || product.category?.name_uk) }}</NuxtLink>
+                          </div>
+                          <h5 class="product-name">
+                            <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
+                          </h5>
+                          <div class="price-box">
+                            <span class="price-regular">{{ product.price }} ₴</span>
+                          </div>
+                          <div class="product-item-action">
+                            <a class="btn btn-cart" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="text-center py-5 text-muted">
+                    {{ locale === 'uk' ? 'Товарів не знайдено' : 'No products found' }}
+                  </div>
+                  <!-- bottom banner -->
+                  <div class="img-container mt-30">
+                    <NuxtLink to="/shop">
+                      <img src="/assets/img/banner/ca2_bottom.jpg" alt="" class="w-100 rounded">
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="section-banner mt-30">
+                  <NuxtLink to="/shop">
+                    <img src="/assets/img/banner/ca2.jpg" alt="" class="w-100 rounded">
+                  </NuxtLink>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- features categories area end 2 -->
+
+      <!-- group list product area start -->
+      <section class="group-list-product-area pt-50" v-if="products.length > 0">
+        <div class="container">
+          <div class="row">
+            <!-- group 1: Special Offers -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="group-list-wrapper bg-white p-4 h-100">
+                <div class="group-list-header border-bottom pb-2 mb-3">
+                  <h4 class="group-list-title mb-0">{{ locale === 'uk' ? 'Спеціальні пропозиції' : 'Special Offers' }}</h4>
+                </div>
+                <div class="group-list-item-wrapper">
+                  <div v-for="product in groupOffers" :key="product.id" class="group-item d-flex align-items-center mb-3">
+                    <div class="group-item-thumb border rounded p-1 mr-3" style="width: 80px; height: 80px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff;">
+                      <NuxtLink :to="`/product/${product.id}`">
+                        <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                      </NuxtLink>
+                    </div>
+                    <div class="group-item-desc">
+                      <h5 class="group-product-name mb-1" style="font-size: 14px; line-height: 1.3;">
+                        <NuxtLink :to="`/product/${product.id}`" class="text-dark">
+                          {{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}
+                        </NuxtLink>
+                      </h5>
+                      <div class="price-box my-1">
+                        <span class="price-regular font-weight-bold text-info">{{ product.price }} ₴</span>
+                      </div>
+                      <div class="add-to-links group-action-link" style="font-size: 14px;">
+                        <a href="#" class="mr-2" @click.prevent="toggleWishlist(product)" :title="locale === 'uk' ? 'В обране' : 'Wishlist'">
+                          <i :class="isInWishlist(product.id) ? 'ion-android-favorite text-danger' : 'ion-android-favorite-outline'"></i>
+                        </a>
+                        <a href="#" @click.prevent="addToCart(product)" :title="locale === 'uk' ? 'В кошик' : 'Add to Cart'">
+                          <i class="ion-bag"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- group 2: New Products -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="group-list-wrapper bg-white p-4 h-100">
+                <div class="group-list-header border-bottom pb-2 mb-3">
+                  <h4 class="group-list-title mb-0">{{ locale === 'uk' ? 'Нові товари' : 'New Products' }}</h4>
+                </div>
+                <div class="group-list-item-wrapper">
+                  <div v-for="product in groupNew" :key="product.id" class="group-item d-flex align-items-center mb-3">
+                    <div class="group-item-thumb border rounded p-1 mr-3" style="width: 80px; height: 80px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff;">
+                      <NuxtLink :to="`/product/${product.id}`">
+                        <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                      </NuxtLink>
+                    </div>
+                    <div class="group-item-desc">
+                      <h5 class="group-product-name mb-1" style="font-size: 14px; line-height: 1.3;">
+                        <NuxtLink :to="`/product/${product.id}`" class="text-dark">
+                          {{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}
+                        </NuxtLink>
+                      </h5>
+                      <div class="price-box my-1">
+                        <span class="price-regular font-weight-bold text-info">{{ product.price }} ₴</span>
+                      </div>
+                      <div class="add-to-links group-action-link" style="font-size: 14px;">
+                        <a href="#" class="mr-2" @click.prevent="toggleWishlist(product)" :title="locale === 'uk' ? 'В обране' : 'Wishlist'">
+                          <i :class="isInWishlist(product.id) ? 'ion-android-favorite text-danger' : 'ion-android-favorite-outline'"></i>
+                        </a>
+                        <a href="#" @click.prevent="addToCart(product)" :title="locale === 'uk' ? 'В кошик' : 'Add to Cart'">
+                          <i class="ion-bag"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- group 3: Popular Products -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="group-list-wrapper bg-white p-4 h-100">
+                <div class="group-list-header border-bottom pb-2 mb-3">
+                  <h4 class="group-list-title mb-0">{{ locale === 'uk' ? 'Популярні товари' : 'Popular Products' }}</h4>
+                </div>
+                <div class="group-list-item-wrapper">
+                  <div v-for="product in groupPopular" :key="product.id" class="group-item d-flex align-items-center mb-3">
+                    <div class="group-item-thumb border rounded p-1 mr-3" style="width: 80px; height: 80px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff;">
+                      <NuxtLink :to="`/product/${product.id}`">
+                        <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                      </NuxtLink>
+                    </div>
+                    <div class="group-item-desc">
+                      <h5 class="group-product-name mb-1" style="font-size: 14px; line-height: 1.3;">
+                        <NuxtLink :to="`/product/${product.id}`" class="text-dark">
+                          {{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}
+                        </NuxtLink>
+                      </h5>
+                      <div class="price-box my-1">
+                        <span class="price-regular font-weight-bold text-info">{{ product.price }} ₴</span>
+                      </div>
+                      <div class="add-to-links group-action-link" style="font-size: 14px;">
+                        <a href="#" class="mr-2" @click.prevent="toggleWishlist(product)" :title="locale === 'uk' ? 'В обране' : 'Wishlist'">
+                          <i :class="isInWishlist(product.id) ? 'ion-android-favorite text-danger' : 'ion-android-favorite-outline'"></i>
+                        </a>
+                        <a href="#" @click.prevent="addToCart(product)" :title="locale === 'uk' ? 'В кошик' : 'Add to Cart'">
+                          <i class="ion-bag"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- group list product area end -->
+
+      <!-- feature product area start -->
+      <section class="feature-product-area pt-50 pb-50" v-if="featuredProducts.length > 0">
+        <div class="container">
+          <div class="feature-product-wrapper bg-white">
+            <div class="row align-items-center">
+              <div class="col-lg-4 col-md-5 col-sm-12">
+                <div class="img-container">
+                  <NuxtLink to="/shop">
+                    <img src="/assets/img/banner/img2_home.jpg" alt="Featured Banner" class="w-100 rounded">
+                  </NuxtLink>
+                </div>
+              </div>
+              <div class="col-lg-8 col-md-7 col-sm-12 mt-4 mt-lg-0">
+                <div class="feature-product-slider-wrapper">
+                  <div class="row">
+                    <div 
+                      v-for="product in featuredProducts" 
+                      :key="product.id" 
+                      class="col-md-6 col-sm-6 mb-4"
+                    >
+                      <!-- Product Card -->
+                      <div class="product-item">
+                        <div class="product-thumb">
+                          <NuxtLink :to="`/product/${product.id}`">
+                            <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" class="product-img">
+                          </NuxtLink>
+                          <div class="add-to-links">
+                            <a 
+                              href="#" 
+                              @click.prevent="toggleWishlist(product)" 
+                              :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
+                            >
+                              <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
+                            </a>
+                            <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-eye"></i></NuxtLink>
+                          </div>
+                        </div>
+                        <div class="product-content">
+                          <div class="product-category">
+                            <NuxtLink :to="`/shop?category=${product.category_id}`">{{ locale === 'uk' ? product.category?.name_uk : (product.category?.name_en || product.category?.name_uk) }}</NuxtLink>
+                          </div>
+                          <h5 class="product-name">
+                            <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
+                          </h5>
+                          <div class="price-box">
+                            <span class="price-regular">{{ product.price }} ₴</span>
+                          </div>
+                          <div class="product-item-action">
+                            <a class="btn btn-cart" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- feature product area end -->
+
+      <!-- brand logo area start -->
+      <section class="brand-logo-area pt-50 pb-50">
+        <div class="container">
+          <div class="brand-logo-inner bg-white p-4">
+            <div class="row align-items-center justify-content-around text-center">
+              <div v-for="n in 5" :key="n" class="col-6 col-md-2 my-3">
+                <NuxtLink to="/shop">
+                  <img :src="`/assets/img/brand/brand-${n}.png`" alt="Brand Logo" class="img-fluid" style="max-height: 50px; opacity: 0.6; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- brand logo area end -->
     </main>
   </div>
 </template>
@@ -194,37 +578,39 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useCart } from '~/composables/useCart';
 import { useWishlist } from '~/composables/useWishlist';
+import { useLocale } from '~/composables/useLocale';
 
 definePageMeta({
   layout: 'default'
 });
 
+const { locale, t } = useLocale();
+
 // Slider config
-const slides = [
+const slides = computed(() => [
   {
     bg: '/assets/img/slider/home1-slide1.jpg',
-    subtitle: 'ПЕРСОНАЛЬНІ КОМП’ЮТЕРИ',
-    title: 'Висока потужність',
-    desc: 'Міні ПК MinisForum та Geekom від 10,500 ₴',
+    subtitle: locale.value === 'uk' ? 'ПЕРСОНАЛЬНІ КОМП’ЮТЕРИ' : 'PERSONAL COMPUTERS',
+    title: locale.value === 'uk' ? 'Висока потужність' : 'High Performance',
+    desc: locale.value === 'uk' ? 'Міні ПК MinisForum та Geekom від 10,500 ₴' : 'MinisForum & Geekom Mini PCs from 10,500 ₴',
   },
   {
     bg: '/assets/img/slider/home1-slide2.jpg',
-    subtitle: 'СУЧАСНІ МОНІТОРИ',
-    title: 'Чітке зображення',
-    desc: 'IPS дисплеї Dell та Acer з частотою до 144Hz',
+    subtitle: locale.value === 'uk' ? 'СУЧАСНІ МОНІТОРИ' : 'MODERN MONITORS',
+    title: locale.value === 'uk' ? 'Чітке зображення' : 'Crystal Clear Image',
+    desc: locale.value === 'uk' ? 'IPS дисплеї Dell та Acer з частотою до 144Hz' : 'Dell & Acer IPS displays up to 144Hz',
   }
-];
+]);
 
 const currentSlide = ref(0);
-const activeSlide = computed(() => (slides[currentSlide.value] || slides[0]) as { bg: string; subtitle: string; title: string; desc: string });
-const activeTab = ref('new');
+const activeSlide = computed(() => (slides.value[currentSlide.value] || slides.value[0]) as { bg: string; subtitle: string; title: string; desc: string });
 
 const nextSlide = () => {
-  currentSlide.value = (currentSlide.value + 1) % slides.length;
+  currentSlide.value = (currentSlide.value + 1) % slides.value.length;
 };
 
 const prevSlide = () => {
-  currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length;
+  currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length;
 };
 
 let slideTimer: any;
@@ -235,18 +621,103 @@ onUnmounted(() => {
   clearInterval(slideTimer);
 });
 
-// Fetch products from backend
+// Fetch data from backend
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
-const { data: products } = await useFetch<any[]>(`${apiBase}/products`);
 
-const filteredProducts = computed(() => {
-  if (!products.value) return [];
-  if (activeTab.value === 'new') {
-    return products.value.slice(0, 8);
+const { data: rawProducts } = await useFetch<any>(`${apiBase}/products`);
+const { data: rawCategories } = await useFetch<any>(`${apiBase}/categories`);
+
+const products = computed<any[]>(() => {
+  if (!rawProducts.value) return [];
+  if (Array.isArray(rawProducts.value)) return rawProducts.value;
+  if (rawProducts.value.rows && Array.isArray(rawProducts.value.rows)) return rawProducts.value.rows;
+  return [];
+});
+
+const categories = computed<any[]>(() => {
+  if (!rawCategories.value) return [];
+  if (Array.isArray(rawCategories.value)) return rawCategories.value;
+  if (rawCategories.value.rows && Array.isArray(rawCategories.value.rows)) return rawCategories.value.rows;
+  return [];
+});
+
+// Helper discount price calculator
+const getOldPrice = (price: number) => {
+  return Math.round(price * 1.25);
+};
+
+// Deals of the week (first 4 products)
+const dealsProducts = computed(() => {
+  return products.value.slice(0, 4);
+});
+
+// Find Computer Category (ID 1 in seed)
+const catComputers = computed(() => {
+  return categories.value.find(c => c.name_uk.includes("Персональні комп'ютери") || c.name_en?.includes("Personal Computers") || c.id === 1);
+});
+
+// Find Laptops Category (ID 3 in seed)
+const catLaptops = computed(() => {
+  return categories.value.find(c => c.name_uk.includes("Ноутбуки") || c.name_en?.includes("Laptops") || c.id === 3);
+});
+
+// Subcategories
+const subCatsComputers = computed(() => {
+  if (!catComputers.value) return [];
+  return categories.value.filter(c => c.parent_id === catComputers.value.id);
+});
+
+const subCatsLaptops = computed(() => {
+  if (!catLaptops.value) return [];
+  return categories.value.filter(c => c.parent_id === catLaptops.value.id);
+});
+
+// Tabs state for category sections
+const activeCatTab1 = ref<string | number>('all');
+const activeCatTab2 = ref<string | number>('all');
+
+// Category products lists
+const productsCat1 = computed(() => {
+  if (!catComputers.value) return [];
+  let list = products.value;
+  if (activeCatTab1.value === 'all') {
+    const ids = [catComputers.value.id, ...subCatsComputers.value.map(c => c.id)];
+    list = list.filter(p => ids.includes(p.category_id));
   } else {
-    return products.value.slice(8, 16);
+    list = list.filter(p => p.category_id === Number(activeCatTab1.value));
   }
+  return list.slice(0, 6);
+});
+
+const productsCat2 = computed(() => {
+  if (!catLaptops.value) return [];
+  let list = products.value;
+  if (activeCatTab2.value === 'all') {
+    const ids = [catLaptops.value.id, ...subCatsLaptops.value.map(c => c.id)];
+    list = list.filter(p => ids.includes(p.category_id));
+  } else {
+    list = list.filter(p => p.category_id === Number(activeCatTab2.value));
+  }
+  return list.slice(0, 6);
+});
+
+// Group lists (Special, New, Most Viewed)
+const groupOffers = computed(() => {
+  return products.value.slice(0, 3);
+});
+
+const groupNew = computed(() => {
+  return products.value.slice(3, 6);
+});
+
+const groupPopular = computed(() => {
+  return products.value.slice(6, 9);
+});
+
+// Featured products area (horizontal banner on left, products list on right)
+const featuredProducts = computed(() => {
+  return products.value.slice(8, 12);
 });
 
 // Cart & Wishlist actions
@@ -290,8 +761,14 @@ const { isInWishlist, toggleWishlist } = useWishlist();
 }
 .product-img {
   width: 100%;
-  height: 250px;
+  height: 230px;
   object-fit: contain;
   background: #fdfdfd;
+}
+.product-item .product-thumb {
+  position: relative;
+  text-align: center;
+  padding-top: 45px;
+  padding-bottom: 45px;
 }
 </style>

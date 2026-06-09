@@ -7,9 +7,10 @@
           <div class="col-12">
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
+                <h1>{{ t('cart') }}</h1>
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><NuxtLink to="/">Головна</NuxtLink></li>
-                  <li class="breadcrumb-item active" aria-current="page">Кошик</li>
+                  <li class="breadcrumb-item"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
+                  <li class="breadcrumb-item active" aria-current="page">{{ t('cart') }}</li>
                 </ul>
               </nav>
             </div>
@@ -20,7 +21,7 @@
     <!-- breadcrumb area end -->
 
     <!-- cart main wrapper start -->
-    <div class="cart-main-wrapper section-space">
+    <div class="shop-main-wrapper pt-50 pb-50">
       <div class="container">
         <div class="section-bg-color bg-white p-4 rounded shadow-sm">
           <div class="row">
@@ -31,12 +32,12 @@
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th class="pro-thumbnail">Зображення</th>
-                        <th class="pro-title">Товар</th>
-                        <th class="pro-price">Ціна</th>
-                        <th class="pro-quantity">Кількість</th>
-                        <th class="pro-subtotal">Всього</th>
-                        <th class="pro-remove">Видалити</th>
+                        <th class="pro-thumbnail">{{ t('image') }}</th>
+                        <th class="pro-title">{{ t('product') }}</th>
+                        <th class="pro-price">{{ t('price') }}</th>
+                        <th class="pro-quantity">{{ t('quantity') }}</th>
+                        <th class="pro-subtotal">{{ t('subtotal') }}</th>
+                        <th class="pro-remove">{{ t('remove') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -47,7 +48,7 @@
                           </NuxtLink>
                         </td>
                         <td class="pro-title">
-                          <NuxtLink :to="`/product/${item.id}`">{{ item.name }}</NuxtLink>
+                          <NuxtLink :to="`/product/${item.id}`">{{ locale === 'uk' ? (item.name_uk || item.name) : (item.name_en || item.name_uk || item.name) }}</NuxtLink>
                         </td>
                         <td class="pro-price"><span>{{ item.price }} ₴</span></td>
                         <td class="pro-quantity">
@@ -75,13 +76,13 @@
                 <!-- Cart Update Options -->
                 <div class="cart-update-option d-xs-block d-md-flex justify-content-between align-items-center mt-30">
                   <div class="apply-coupon-wrapper">
-                    <NuxtLink to="/shop" class="btn btn-secondary text-white font-weight-bold" style="background-color: #777; border: none; padding: 10px 20px;">
-                      Продовжити покупки
+                    <NuxtLink to="/shop" class="btn btn-outline">
+                      {{ locale === 'uk' ? 'Продовжити покупки' : 'Continue Shopping' }}
                     </NuxtLink>
                   </div>
                   <div class="cart-update mt-xs-30">
-                    <button @click="clearCart" class="btn btn-secondary font-weight-bold" style="background-color: #dc3545; border: none; padding: 10px 20px;">
-                      Очистити кошик
+                    <button @click="clearCart" class="btn btn-outline">
+                      {{ t('clearCart') }}
                     </button>
                   </div>
                 </div>
@@ -91,26 +92,26 @@
                   <div class="col-lg-5 ml-auto">
                     <div class="cart-calculator-wrapper border p-4 rounded bg-light">
                       <div class="cart-calculate-items">
-                        <h3 class="border-bottom pb-2 mb-3">Сума замовлення</h3>
+                        <h3 class="border-bottom pb-2 mb-3">{{ locale === 'uk' ? 'Сума замовлення' : 'Cart Totals' }}</h3>
                         <div class="table-responsive">
                           <table class="table">
                             <tr>
-                              <td>Товари</td>
+                              <td>{{ locale === 'uk' ? 'Товари' : 'Subtotal' }}</td>
                               <td>{{ cartTotal }} ₴</td>
                             </tr>
                             <tr>
-                              <td>Доставка</td>
-                              <td>Безкоштовно</td>
+                              <td>{{ locale === 'uk' ? 'Доставка' : 'Shipping' }}</td>
+                              <td>{{ locale === 'uk' ? 'Безкоштовно' : 'Free Shipping' }}</td>
                             </tr>
                             <tr class="total border-top">
-                              <td class="font-weight-bold">Разом</td>
+                              <td class="font-weight-bold">{{ locale === 'uk' ? 'Разом' : 'Total' }}</td>
                               <td class="text-success font-weight-bold">{{ cartTotal }} ₴</td>
                             </tr>
                           </table>
                         </div>
                       </div>
-                      <NuxtLink to="/checkout" class="btn btn-secondary d-block text-center text-white font-weight-bold mt-3" style="background-color: #00DC82; border: none; padding: 12px;">
-                        Перейти до оформлення
+                      <NuxtLink to="/checkout" class="btn btn__bg d-block text-center text-white font-weight-bold mt-3" style="padding: 12px;">
+                        {{ locale === 'uk' ? 'Перейти до оформлення' : 'Proceed to Checkout' }}
                       </NuxtLink>
                     </div>
                   </div>
@@ -122,10 +123,10 @@
                 <div class="empty-cart-icon mb-4" style="font-size: 64px; color: #ccc;">
                   <i class="ion-bag"></i>
                 </div>
-                <h3>Ваш кошик порожній!</h3>
-                <p class="text-muted mt-2">Ви не додали жодного товару в кошик.</p>
-                <NuxtLink to="/shop" class="btn btn-secondary text-white font-weight-bold mt-4" style="background-color: #00DC82; border: none; padding: 12px 30px;">
-                  Повернутися до магазину
+                <h3>{{ locale === 'uk' ? 'Ваш кошик порожній!' : 'Your cart is empty!' }}</h3>
+                <p class="text-muted mt-2">{{ locale === 'uk' ? 'Ви не додали жодного товару в кошик.' : 'You have not added any products to the cart yet.' }}</p>
+                <NuxtLink to="/shop" class="btn btn__bg mt-4" style="padding: 12px 30px;">
+                  {{ locale === 'uk' ? 'Повернутися до магазину' : 'Return to Shop' }}
                 </NuxtLink>
               </div>
             </div>
@@ -139,11 +140,13 @@
 
 <script setup lang="ts">
 import { useCart } from '~/composables/useCart';
+import { useLocale } from '~/composables/useLocale';
 
 definePageMeta({
   layout: 'default'
 });
 
+const { locale, t } = useLocale();
 const { cartItems, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
 </script>
 

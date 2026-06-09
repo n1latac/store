@@ -72,6 +72,35 @@ function scrapeOgImage(urlStr: string): Promise<string | null> {
   });
 }
 
+function translateNameToEn(name: string): string {
+  let translated = name.trim();
+  const replacements: Record<string, string> = {
+    // Categories
+    "Персональні комп'ютери": "Personal Computers",
+    "Додаткове обладнання до ПК": "Additional PC Equipment",
+    "Ноутбуки": "Laptops",
+    "Багатофункціональні пристрої та принтери": "Multifunction Printers & Printers",
+    "Інтерактивні панелі": "Interactive Panels",
+    "Дидактика (під замовлення)": "Didactics (on request)",
+    "БФП Струменеві": "Inkjet MFP",
+    "БФП Лазерні ч/б": "Laser MFP B/W",
+    "БФП Лазерні кольорові": "Laser MFP Color",
+    "Принтери ч/б": "Printers B/W",
+    "Принтери кольорові": "Printers Color",
+
+    // Products / General
+    "Міні ПК": "Mini PC",
+    "Робоча станція": "Workstation",
+    "Еліт Міні ПК": "Elite Mini PC"
+  };
+
+  for (const [uk, en] of Object.entries(replacements)) {
+    const regex = new RegExp(uk, 'gi');
+    translated = translated.replace(regex, en);
+  }
+  return translated;
+}
+
 async function run() {
   console.log('Initializing database connection...');
   const sequelize = new Sequelize({
@@ -142,14 +171,15 @@ async function run() {
 
       // Check if it's a main category (has "#" like "1.", "2.", "5.")
       if (num && String(num).trim().match(/^\d+\.$/)) {
+        const nameEn = translateNameToEn(name);
         currentParentCategory = await Category.create({
           name_uk: name,
-          name_en: name, // We can duplicate or translate if needed, but keeping simple
+          name_en: nameEn,
           parent_id: null,
         } as any);
         categoryCount++;
         currentSubCategory = null;
-        console.log(`Created Main Category: "${name}"`);
+        console.log(`Created Main Category: "${name}" (${nameEn})`);
         continue;
       }
 
@@ -175,7 +205,7 @@ async function run() {
           // If no category has been set yet, create a default "Інше" category
           let defaultCat = await Category.findOne({ where: { name_uk: 'Інше' } });
           if (!defaultCat) {
-            defaultCat = await Category.create({ name_uk: 'Інше', parent_id: null } as any);
+            defaultCat = await Category.create({ name_uk: 'Інше', name_en: 'Other', parent_id: null } as any);
           }
           activeCategoryId = defaultCat.id;
         }
@@ -222,9 +252,10 @@ async function run() {
           }
         }
 
+        const nameEn = translateNameToEn(name);
         const product = await Product.create({
           name_uk: name,
-          name_en: null,
+          name_en: nameEn,
           price: hasPrice ? Number(price) : 0,
           image_url: assignedImage,
           attributes,
@@ -241,13 +272,14 @@ async function run() {
       } else {
         // Otherwise, it is a sub-category / brand under the active main category
         if (currentParentCategory) {
+          const nameEn = translateNameToEn(name);
           currentSubCategory = await Category.create({
             name_uk: name,
-            name_en: name,
+            name_en: nameEn,
             parent_id: currentParentCategory.id,
           } as any);
           subCategoryCount++;
-          console.log(`  Created Sub-Category: "${name}" under "${currentParentCategory.name_uk}"`);
+          console.log(`  Created Sub-Category: "${name}" (${nameEn}) under "${currentParentCategory.name_uk}"`);
         }
       }
     }

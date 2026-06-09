@@ -56,7 +56,7 @@
               <div class="footer-widget-item">
                 <div class="footer-widget-logo">
                   <NuxtLink to="/">
-                    <img src="/assets/img/logo/logo.png" alt="Aivix tech Logo">
+                    <img src="/assets/img/logo/logo.svg" alt="Aivix tech Logo">
                   </NuxtLink>
                 </div>
                 <div class="footer-widget-body">

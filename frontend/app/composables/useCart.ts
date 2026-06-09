@@ -3,6 +3,8 @@ import { computed } from 'vue';
 export interface CartItem {
   id: number;
   name: string;
+  name_uk?: string;
+  name_en?: string | null;
   price: number;
   image: string;
   quantity: number;
@@ -24,7 +26,7 @@ export const useCart = () => {
     return cartItems.value.reduce((acc, item) => acc + item.price * item.quantity, 0);
   });
 
-  const addToCart = (product: { id: number; name_uk: string; price: number | string; image_url: string }, quantity: number = 1) => {
+  const addToCart = (product: { id: number; name_uk: string; name_en?: string | null; price: number | string; image_url: string }, quantity: number = 1) => {
     const items = [...cartItems.value];
     const existing = items.find(item => item.id === product.id);
     if (existing) {
@@ -33,6 +35,8 @@ export const useCart = () => {
       items.push({
         id: product.id,
         name: product.name_uk,
+        name_uk: product.name_uk,
+        name_en: product.name_en || null,
         price: Number(product.price),
         image: product.image_url,
         quantity,

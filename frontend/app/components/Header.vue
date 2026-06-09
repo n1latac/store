@@ -8,18 +8,42 @@
           <div class="row align-items-center">
             <div class="col-lg-6">
               <div class="header-top-settings">
-                <ul class="nav align-items-center">
-                  <li class="language">
-                    <span>Мова:</span>
-                    <img src="/assets/img/icon/en.png" alt="English"> English
+                <ul class="nav align-items-center d-flex flex-row">
+                  <li class="language" @click="isLangOpen = !isLangOpen" @mouseleave="isLangOpen = false" style="cursor: pointer; position: relative; display: inline-flex; align-items: center; white-space: nowrap;">
+                    <span style="margin-right: 5px;">{{ locale === 'uk' ? 'Мова:' : 'Language:' }}</span>
+                    <!-- Pure CSS Ukrainian Flag -->
+                    <span v-if="locale === 'uk'" class="d-inline-flex border" style="width: 16px; height: 10px; margin-right: 5px; flex-direction: column; overflow: hidden; vertical-align: middle; line-height: 1;">
+                      <span style="height: 5px; width: 100%; background: #0057B7; display: block;"></span>
+                      <span style="height: 5px; width: 100%; background: #FFD700; display: block;"></span>
+                    </span>
+                    <img v-else src="/assets/img/icon/en.png" alt="English" style="width: 16px; height: 11px; margin-right: 5px; vertical-align: middle;">
+                    {{ locale === 'uk' ? 'Українська' : 'English' }}
+                    <i class="fa fa-angle-down" style="margin-left: 5px;"></i>
+                    <ul class="dropdown-list" :class="{ 'show': isLangOpen }" style="white-space: nowrap;">
+                      <li>
+                        <a href="#" @click.prevent="setLocale('uk')" style="display: inline-flex; align-items: center;">
+                          <span class="d-inline-flex border" style="width: 16px; height: 10px; margin-right: 5px; flex-direction: column; overflow: hidden; vertical-align: middle; line-height: 1;">
+                            <span style="height: 5px; width: 100%; background: #0057B7; display: block;"></span>
+                            <span style="height: 5px; width: 100%; background: #FFD700; display: block;"></span>
+                          </span>
+                          Українська
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" @click.prevent="setLocale('en')" style="display: inline-flex; align-items: center;">
+                          <img src="/assets/img/icon/en.png" alt="English" style="width: 16px; height: 11px; margin-right: 5px; vertical-align: middle;">
+                          English
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="header-links">
-                <ul class="nav justify-content-end">
-                  <li><NuxtLink to="/admin/categories">Адмін-панель</NuxtLink></li>
+                <ul class="nav justify-content-end d-flex flex-row">
+                  <li><NuxtLink to="/admin/categories">{{ t('adminPanel') }}</NuxtLink></li>
                 </ul>
               </div>
             </div>
@@ -36,7 +60,7 @@
             <div class="col-lg-3">
               <div class="logo">
                 <NuxtLink to="/">
-                  <img src="/assets/img/logo/logo.png" alt="Aivix tech Logo">
+                  <img src="/assets/img/logo/logo.svg" alt="Aivix tech Logo" style="height: 38px; width: auto;">
                 </NuxtLink>
               </div>
             </div>
@@ -53,7 +77,7 @@
                     @focus="isSearchFocused = true"
                     @blur="onSearchBlur"
                     class="search-field"
-                    placeholder="Пошук товарів..."
+                    :placeholder="t('searchPlaceholder')"
                   >
                   <button type="submit" class="search-btn"><i class="ion-ios-search"></i></button>
                 </form>
@@ -72,7 +96,7 @@
                 >
                   <img :src="getProductImage(item)" class="suggestion-img" />
                   <div class="suggestion-info">
-                    <span class="suggestion-name">{{ item.name_uk }}</span>
+                    <span class="suggestion-name">{{ locale === 'uk' ? item.name_uk : (item.name_en || item.name_uk) }}</span>
                     <span class="suggestion-price">{{ item.price }} ₴</span>
                   </div>
                 </div>
@@ -88,12 +112,12 @@
                     <i class="ion-android-call"></i>
                   </div>
                   <div class="support-info">
-                    <p>Підтримка дзвінків:</p>
+                    <p>{{ t('support') }}</p>
                     <strong><a href="tel:+380441234567">+38 (044) 123-45-67</a></strong>
                   </div>
                 </div>
                 <div class="header-configure-area">
-                  <ul class="nav justify-content-end">
+                  <ul class="nav justify-content-end d-flex flex-row">
                     <li>
                       <NuxtLink to="/shop">
                         <i class="ion-android-favorite-outline"></i>
@@ -114,7 +138,7 @@
                               </NuxtLink>
                             </div>
                             <div class="cart-info">
-                              <h4><NuxtLink :to="`/product/${item.id}`">{{ item.name }}</NuxtLink></h4>
+                              <h4><NuxtLink :to="`/product/${item.id}`">{{ locale === 'uk' ? (item.name_uk || item.name) : (item.name_en || item.name_uk || item.name) }}</NuxtLink></h4>
                               <span class="cart-qty">К-ть: {{ item.quantity }}</span>
                               <span>{{ item.price }} ₴</span>
                             </div>
@@ -124,18 +148,18 @@
                           </li>
                         </ul>
                         <div v-else class="text-center py-4 text-muted">
-                          Кошик порожній
+                          {{ t('cartEmpty') }}
                         </div>
                         <template v-if="cartItems.length > 0">
                           <ul class="minicart-pricing-box">
                             <li class="total">
-                              <span>Всього</span>
+                              <span>{{ t('total') }}</span>
                               <span><strong>{{ cartTotal }} ₴</strong></span>
                             </li>
                           </ul>
                           <div class="minicart-button">
-                            <NuxtLink to="/cart"><i class="fa fa-shopping-cart"></i> В кошик</NuxtLink>
-                            <NuxtLink to="/checkout"><i class="fa fa-share"></i> Оформити</NuxtLink>
+                            <NuxtLink to="/cart"><i class="fa fa-shopping-cart"></i> {{ t('cart') }}</NuxtLink>
+                            <NuxtLink to="/checkout"><i class="fa fa-share"></i> {{ t('checkout') }}</NuxtLink>
                           </div>
                         </template>
                       </div>
@@ -158,18 +182,18 @@
               <div class="category-toggle-wrap">
                 <div class="category-toggle" @click="isCategoryMenuOpen = !isCategoryMenuOpen">
                   <i class="ion-android-menu"></i>
-                  Категорії товарів
+                  {{ t('categoriesTitle') }}
                 </div>
                 <nav class="category-menu" :style="{ display: isCategoryMenuOpen ? 'block' : 'none' }">
                   <ul class="categories-list">
                     <li v-for="parentCat in parentCategories" :key="parentCat.id" class="menu-item-has-children">
-                      <NuxtLink :to="`/shop?category=${parentCat.id}`">{{ parentCat.name_uk }}</NuxtLink>
+                      <NuxtLink :to="`/shop?category=${parentCat.id}`">{{ locale === 'uk' ? parentCat.name_uk : (parentCat.name_en || parentCat.name_uk) }}</NuxtLink>
                       <!-- Sub Category Menu Start -->
                       <ul v-if="getSubCategories(parentCat.id).length > 0" class="category-mega-menu dropdown">
                         <li class="menu-item-has-children">
                           <ul class="dropdown" style="display: block;">
                             <li v-for="subCat in getSubCategories(parentCat.id)" :key="subCat.id">
-                              <NuxtLink :to="`/shop?category=${subCat.id}`">{{ subCat.name_uk }}</NuxtLink>
+                              <NuxtLink :to="`/shop?category=${subCat.id}`">{{ locale === 'uk' ? subCat.name_uk : (subCat.name_en || subCat.name_uk) }}</NuxtLink>
                             </li>
                           </ul>
                         </li>
@@ -184,11 +208,11 @@
               <div class="main-menu main-menu-style-1">
                 <!-- main menu navbar start -->
                 <nav class="desktop-menu">
-                  <ul>
-                    <li :class="{ active: route.path === '/' }"><NuxtLink to="/">Головна</NuxtLink></li>
-                    <li :class="{ active: route.path === '/shop' }"><NuxtLink to="/shop">Магазин</NuxtLink></li>
-                    <li :class="{ active: route.path === '/cart' }"><NuxtLink to="/cart">Кошик</NuxtLink></li>
-                    <li :class="{ active: route.path === '/checkout' }"><NuxtLink to="/checkout">Оформлення замовлення</NuxtLink></li>
+                  <ul class="d-flex flex-row">
+                    <li :class="{ active: route.path === '/' }"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
+                    <li :class="{ active: route.path === '/shop' }"><NuxtLink to="/shop">{{ t('shop') }}</NuxtLink></li>
+                    <li :class="{ active: route.path === '/cart' }"><NuxtLink to="/cart">{{ t('cart') }}</NuxtLink></li>
+                    <li :class="{ active: route.path === '/checkout' }"><NuxtLink to="/checkout">{{ t('checkout') }}</NuxtLink></li>
                   </ul>
                 </nav>
                 <!-- main menu navbar end -->
@@ -209,7 +233,7 @@
             <div class="mobile-main-header">
               <div class="mobile-logo">
                 <NuxtLink to="/">
-                  <img src="/assets/img/logo/logo-black.png" alt="Brand Logo">
+                  <img src="/assets/img/logo/logo-black.svg" alt="Brand Logo">
                 </NuxtLink>
               </div>
               <div class="mobile-menu-toggler">
@@ -244,7 +268,7 @@
           <!-- search box start -->
           <div class="search-box-offcanvas">
             <form @submit.prevent="handleSearch">
-              <input type="text" v-model="searchQuery" placeholder="Пошук товарів...">
+              <input type="text" v-model="searchQuery" :placeholder="t('searchPlaceholder')">
               <button type="submit" class="search-btn"><i class="ion-ios-search-strong"></i></button>
             </form>
           </div>
@@ -255,11 +279,11 @@
             <!-- mobile menu navigation start -->
             <nav>
               <ul class="mobile-menu">
-                <li><NuxtLink to="/" @click="isMobileMenuOpen = false">Головна</NuxtLink></li>
-                <li><NuxtLink to="/shop" @click="isMobileMenuOpen = false">Магазин</NuxtLink></li>
-                <li><NuxtLink to="/cart" @click="isMobileMenuOpen = false">Кошик</NuxtLink></li>
-                <li><NuxtLink to="/checkout" @click="isMobileMenuOpen = false">Оформлення замовлення</NuxtLink></li>
-                <li><NuxtLink to="/admin/categories" @click="isMobileMenuOpen = false">Адмін-панель</NuxtLink></li>
+                <li><NuxtLink to="/" @click="isMobileMenuOpen = false">{{ t('home') }}</NuxtLink></li>
+                <li><NuxtLink to="/shop" @click="isMobileMenuOpen = false">{{ t('shop') }}</NuxtLink></li>
+                <li><NuxtLink to="/cart" @click="isMobileMenuOpen = false">{{ t('cart') }}</NuxtLink></li>
+                <li><NuxtLink to="/checkout" @click="isMobileMenuOpen = false">{{ t('checkout') }}</NuxtLink></li>
+                <li><NuxtLink to="/admin/categories" @click="isMobileMenuOpen = false">{{ t('adminPanel') }}</NuxtLink></li>
               </ul>
             </nav>
             <!-- mobile menu navigation end -->
@@ -277,12 +301,16 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCart } from '~/composables/useCart';
 import { useWishlist } from '~/composables/useWishlist';
+import { useLocale } from '~/composables/useLocale';
 
 const route = useRoute();
 const isHome = computed(() => route.path === '/');
 
+const { locale, setLocale, t } = useLocale();
+
 const isCategoryMenuOpen = ref(false);
 const isMobileMenuOpen = ref(false);
+const isLangOpen = ref(false);
 const searchQuery = ref('');
 const isSearchFocused = ref(false);
 const searchSuggestions = ref<any[]>([]);
@@ -290,6 +318,7 @@ const searchSuggestions = ref<any[]>([]);
 watch(() => route.path, () => {
   isCategoryMenuOpen.value = false;
   isMobileMenuOpen.value = false;
+  isLangOpen.value = false;
 });
 
 // Fetch categories from database
@@ -388,6 +417,20 @@ const getProductImage = (product: any) => {
 </script>
 
 <style scoped>
+.header-top {
+  position: relative;
+  z-index: 120;
+}
+.header-area {
+  position: relative;
+  z-index: 999;
+}
+.header-top-settings ul li .dropdown-list.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
 .header-middle-area {
   position: relative;
   z-index: 110;

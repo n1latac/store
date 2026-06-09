@@ -7,10 +7,11 @@
           <div class="col-12">
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
+                <h1>{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</h1>
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><NuxtLink to="/">Головна</NuxtLink></li>
-                  <li class="breadcrumb-item"><NuxtLink to="/shop">Магазин</NuxtLink></li>
-                  <li class="breadcrumb-item active" aria-current="page">{{ product.name_uk }}</li>
+                  <li class="breadcrumb-item"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
+                  <li class="breadcrumb-item"><NuxtLink to="/shop">{{ t('shop') }}</NuxtLink></li>
+                  <li class="breadcrumb-item active" aria-current="page">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</li>
                 </ul>
               </nav>
             </div>
@@ -21,7 +22,7 @@
     <!-- breadcrumb area end -->
 
     <!-- page main wrapper start -->
-    <main class="product-details-wrapper section-space">
+    <main class="shop-main-wrapper pt-50 pb-50">
       <div class="container">
         <div class="row">
           <div class="col-lg-9 bg-white p-4 rounded shadow-sm">
@@ -56,17 +57,17 @@
                   <div class="product-details-des mt-md-30">
                     <div class="product-category mb-2">
                       <NuxtLink :to="`/shop?category=${product.category_id}`" class="text-muted">
-                        {{ product.category?.name_uk }}
+                        {{ locale === 'uk' ? product.category?.name_uk : (product.category?.name_en || product.category?.name_uk) }}
                       </NuxtLink>
                     </div>
-                    <h3 class="product-name-title mb-3">{{ product.name_uk }}</h3>
+                    <h3 class="product-name-title mb-3">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</h3>
                     
                     <div class="price-box mb-3">
-                      <span class="regular-price text-success h4 font-weight-bold">{{ product.price }} ₴</span>
+                      <span class="price-regular">{{ product.price }} ₴</span>
                     </div>
 
                     <div class="product-description-brief mb-4 text-muted">
-                      Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.
+                      {{ locale === 'uk' ? 'Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.' : 'You can find the technical specifications of this product in the table below. The product is available for purchase.' }}
                     </div>
 
                     <!-- Quantity and actions -->
@@ -83,10 +84,10 @@
                         <span class="inc qtybtn cursor-pointer px-2" @click="incQty">+</span>
                       </div>
                       <button 
-                        class="btn btn-secondary text-white font-weight-bold" 
+                        class="btn btn__bg" 
                         @click="handleAddToCart"
-                        style="background-color: #00DC82; border: none; height: 45px; padding: 0 25px;"
-                      >В кошик</button>
+                        style="height: 45px; padding: 0 25px;"
+                      >{{ t('addToCart') }}</button>
                     </div>
 
                     <!-- External Resource Link Button -->
@@ -97,7 +98,7 @@
                         class="btn btn-outline-info w-100 font-weight-bold d-flex align-items-center justify-content-center"
                         style="height: 45px; font-size: 16px; border-color: #17a2b8;"
                       >
-                        <i class="ion-android-open mr-2"></i> Купити на першоджерелі
+                        <i class="ion-android-open mr-2"></i> {{ locale === 'uk' ? 'Купити на першоджерелі' : 'Buy on original source' }}
                       </a>
                     </div>
 
@@ -112,7 +113,7 @@
                           class="mr-2"
                           :class="isInWishlist(product.id) ? 'ion-android-favorite text-danger' : 'ion-android-favorite-outline'"
                         ></i>
-                        {{ isInWishlist(product.id) ? 'Видалити з обраного' : 'Додати до обраного' }}
+                        {{ isInWishlist(product.id) ? (locale === 'uk' ? 'Видалити з обраного' : 'Remove from wishlist') : (locale === 'uk' ? 'Додати до обраного' : 'Add to wishlist') }}
                       </a>
                     </div>
                   </div>
@@ -132,14 +133,14 @@
                           href="#" 
                           :class="{ active: activeTab === 'specs' }" 
                           @click.prevent="activeTab = 'specs'"
-                        >Характеристики</a>
+                        >{{ t('characteristics') }}</a>
                       </li>
                       <li>
                         <a 
                           href="#" 
                           :class="{ active: activeTab === 'description' }" 
                           @click.prevent="activeTab = 'description'"
-                        >Опис</a>
+                        >{{ t('description') }}</a>
                       </li>
                     </ul>
                     
@@ -149,15 +150,15 @@
                         <table class="table table-striped table-bordered spec-table">
                           <tbody>
                             <tr v-if="product.attributes?.brand">
-                              <td class="font-weight-bold" style="width: 30%;">Бренд</td>
+                              <td class="font-weight-bold" style="width: 30%;">{{ locale === 'uk' ? 'Бренд' : 'Brand' }}</td>
                               <td>{{ product.attributes.brand }}</td>
                             </tr>
                             <tr v-if="product.attributes?.ram">
-                              <td class="font-weight-bold">Оперативна пам’ять</td>
+                              <td class="font-weight-bold">{{ locale === 'uk' ? 'Оперативна пам’ять' : 'RAM' }}</td>
                               <td>{{ product.attributes.ram }}</td>
                             </tr>
                             <tr v-if="product.attributes?.storage">
-                              <td class="font-weight-bold">Накопичувач</td>
+                              <td class="font-weight-bold">{{ locale === 'uk' ? 'Накопичувач' : 'Storage' }}</td>
                               <td>{{ product.attributes.storage }}</td>
                             </tr>
                             <tr v-for="(val, key) in customSpecs" :key="key">
@@ -165,7 +166,7 @@
                               <td>{{ val }}</td>
                             </tr>
                             <tr v-if="!hasSpecs">
-                              <td colspan="2" class="text-center text-muted">Характеристики відсутні</td>
+                              <td colspan="2" class="text-center text-muted">{{ locale === 'uk' ? 'Характеристики відсутні' : 'No specifications available' }}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -175,10 +176,10 @@
                       <div v-if="activeTab === 'description'" class="tab-pane fade show active">
                         <div class="product-description-full text-muted">
                           <p>
-                            Оригінальний продукт {{ product.name_uk }}. Відповідає всім міжнародним стандартам якості та комплектується офіційною гарантією.
+                            {{ locale === 'uk' ? 'Оригінальний продукт ' + product.name_uk + '. Відповідає всім міжнародним стандартам якості та комплектується офіційною гарантією.' : 'Original product ' + (product.name_en || product.name_uk) + '. Meets all international quality standards and comes with an official warranty.' }}
                           </p>
                           <p v-if="product.attributes?.external_link">
-                            Ви можете ознайомитися з усіма деталями, відгуками та оглядами на першоджерелі: 
+                            {{ locale === 'uk' ? 'Ви можете ознайомитися з усіма деталями, відгуками та оглядами на першоджерелі:' : 'You can read all the details, reviews, and specs on the original source:' }}
                             <a :href="product.attributes.external_link" target="_blank">{{ product.attributes.external_link }}</a>
                           </p>
                         </div>
@@ -194,20 +195,20 @@
           <!-- sidebar related products -->
           <div class="col-lg-3">
             <div class="related-products-sidebar p-3 border rounded bg-white shadow-sm">
-              <h5 class="border-bottom pb-2 mb-3">Схожі товари</h5>
+              <h5 class="border-bottom pb-2 mb-3">{{ locale === 'uk' ? 'Схожі товари' : 'Related Products' }}</h5>
               <div v-if="relatedProducts.length > 0" class="related-list">
                 <div v-for="rp in relatedProducts" :key="rp.id" class="related-item mb-4 pb-3 border-bottom">
                   <NuxtLink :to="`/product/${rp.id}`">
                     <img :src="rp.image_url" alt="" class="img-fluid mb-2 related-img rounded">
                   </NuxtLink>
                   <h6 class="related-title text-truncate">
-                    <NuxtLink :to="`/product/${rp.id}`" class="text-dark font-weight-bold">{{ rp.name_uk }}</NuxtLink>
+                    <NuxtLink :to="`/product/${rp.id}`" class="text-dark font-weight-bold">{{ locale === 'uk' ? rp.name_uk : (rp.name_en || rp.name_uk) }}</NuxtLink>
                   </h6>
                   <span class="text-success font-weight-bold">{{ rp.price }} ₴</span>
                 </div>
               </div>
               <div v-else class="text-muted text-center py-4">
-                Немає схожих товарів
+                {{ locale === 'uk' ? 'Немає схожих товарів' : 'No related products found' }}
               </div>
             </div>
           </div>
@@ -223,12 +224,14 @@ import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCart } from '~/composables/useCart';
 import { useWishlist } from '~/composables/useWishlist';
+import { useLocale } from '~/composables/useLocale';
 
 definePageMeta({
   layout: 'default'
 });
 
 const route = useRoute();
+const { locale, t } = useLocale();
 
 // Fetch product details
 const config = useRuntimeConfig();
@@ -289,7 +292,7 @@ const { isInWishlist, toggleWishlist } = useWishlist();
 const handleAddToCart = () => {
   if (product.value) {
     addToCart(product.value, quantity.value);
-    alert('Товар додано в кошик!');
+    alert(locale.value === 'uk' ? 'Товар додано в кошик!' : 'Product added to cart!');
   }
 };
 </script>
