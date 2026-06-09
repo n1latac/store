@@ -17,13 +17,13 @@ echo "📦 Installing backend dependencies..."
 npm install
 
 echo "🔨 Building NestJS application..."
-npm run build
+# Set memory limit to 3GB for Node process during compilation to avoid OOM
+NODE_OPTIONS="--max-old-space-size=3072" npm run build
 
 echo "🗄️ Running database migrations..."
 npm run migrate
 
 echo "🔄 Reloading backend in PM2..."
-# If process exists, reload it. Otherwise, start it for the first time.
 if pm2 describe store-backend > /dev/null 2>&1; then
     pm2 reload store-backend --update-env
 else
@@ -38,16 +38,15 @@ echo "--- Updating Frontend ---"
 cd frontend
 
 echo "📦 Installing frontend dependencies..."
-# Make sure pnpm is installed on the server (npm install -g pnpm)
 pnpm install
 
 echo "🔨 Building Nuxt application..."
-pnpm build
+# Nuxt/Vite builds are very heavy, we allocate up to 3GB of memory for compilation
+NODE_OPTIONS="--max-old-space-size=3072" pnpm build
 
 cd ..
 
 echo "🔄 Reloading frontend in PM2..."
-# If process exists, reload it. Otherwise, start it for the first time.
 if pm2 describe store-frontend > /dev/null 2>&1; then
     pm2 reload store-frontend --update-env
 else
