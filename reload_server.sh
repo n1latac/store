@@ -38,9 +38,9 @@ if [ -f "frontend/.env" ]; then
     export $(cat frontend/.env | grep -v '^#' | xargs)
 fi
 
-echo "🔄 Reloading frontend in PM2..."
+echo "🔄 Restarting frontend in PM2..."
 if pm2 describe store-frontend > /dev/null 2>&1; then
-    pm2 reload store-frontend --update-env
+    pm2 restart store-frontend --update-env
 else
     echo "💡 process 'store-frontend' not found in PM2, starting it for the first time..."
     pm2 start frontend/.output/server/index.mjs --name "store-frontend" --env PORT=3000
