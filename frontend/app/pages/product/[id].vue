@@ -70,9 +70,9 @@
                       <span class="price-regular">{{ product.price }} ₴</span>
                     </div>
 
-                    <div class="product-description-brief mb-4 text-muted" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                       {{ locale === 'uk' ? (product.description_uk || 'Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.') : (product.description_en || product.description_uk || 'You can find the technical specifications of this product in the table below. The product is available for purchase.') }}
-                     </div>
+                    <div class="product-description-brief mb-4 text-muted">
+                      {{ locale === 'uk' ? 'Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.' : 'You can find the technical specifications of this product in the table below. The product is available for purchase.' }}
+                    </div>
 
                     <!-- Quantity and actions -->
                     <div class="quantity-add-cart d-flex align-items-center mb-4">
