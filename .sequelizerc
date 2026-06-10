@@ -1,6 +1,10 @@
 const path = require('path');
 
-require('ts-node/register');
+try {
+    require('ts-node/register');
+} catch (e) {
+    // Ignore: ts-node is not installed in production since we build locally
+}
 
 module.exports = {
     'config': path.resolve('dist/database/config', 'config.js'),
