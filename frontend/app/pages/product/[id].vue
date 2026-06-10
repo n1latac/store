@@ -413,10 +413,20 @@ const handleAddToCart = () => {
 
 <style scoped>
 .main-product-image {
-  max-height: 400px;
+  height: 400px;
   width: 100%;
   object-fit: contain;
   background: #fafafa;
+}
+@media (max-width: 768px) {
+  .main-product-image {
+    height: 300px;
+  }
+}
+@media (max-width: 576px) {
+  .main-product-image {
+    height: 250px;
+  }
 }
 .thumbnail-wrapper {
   cursor: pointer;
