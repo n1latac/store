@@ -144,7 +144,7 @@
               <!-- single sidebar end -->
 
               <!-- single sidebar start (Brand Checklist) -->
-              <div class="sidebar-single" v-if="availableBrands.length > 0">
+              <div class="sidebar-single" v-if="false && availableBrands.length > 0">
                 <div class="sidebar-title">
                   <h3>{{ t('brandFilter') }}</h3>
                 </div>
@@ -168,7 +168,7 @@
               <!-- single sidebar end -->
 
               <!-- single sidebar start (RAM Checklist) -->
-              <div class="sidebar-single" v-if="availableRams.length > 0">
+              <div class="sidebar-single" v-if="false && availableRams.length > 0">
                 <div class="sidebar-title">
                   <h3>{{ t('ramFilter') }}</h3>
                 </div>
