@@ -7,7 +7,7 @@
           <div class="col-12">
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
-                <h1>{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</h1>
+                <h1>{{ locale === 'uk' ? (product.category?.name_uk || product.name_uk) : (product.category?.name_en || product.category?.name_uk || product.name_en || product.name_uk) }}</h1>
                 <ul class="breadcrumb">
                   <li class="breadcrumb-item"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
                   <li class="breadcrumb-item"><NuxtLink to="/shop">{{ t('shop') }}</NuxtLink></li>
@@ -25,9 +25,10 @@
     <main class="shop-main-wrapper pt-50 pb-50">
       <div class="container">
         <div class="row">
-          <div class="col-lg-9 bg-white p-4 rounded shadow-sm">
-            <!-- product details inner end -->
-            <div class="product-details-inner">
+          <div class="col-lg-9">
+            <div class="bg-white p-4 rounded shadow-sm">
+              <!-- product details inner end -->
+              <div class="product-details-inner">
               <div class="row">
                 <div class="col-lg-6">
                   <!-- Product Image Gallery -->
@@ -198,6 +199,7 @@
               </div>
             </div>
             <!-- product details reviews end -->
+            </div>
           </div>
 
           <!-- sidebar related products -->
