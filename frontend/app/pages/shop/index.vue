@@ -44,11 +44,12 @@
                           :key="parentCat.id"
                           :class="{ 'menu-item-has-children': getSubCategories(parentCat.id).length > 0 }"
                         >
-                          <div class="d-flex align-items-center justify-content-between">
+                          <div class="d-flex align-items-center justify-content-between w-100">
                             <a 
                               href="#" 
                               @click.prevent="handleParentCategoryClick(parentCat.id)" 
                               class="flex-grow-1"
+                              style="min-width: 0;"
                               :class="{ 
                                 'active-link': activeCategoryId === parentCat.id,
                                 'parent-active-link': isChildSubCategoryActive(parentCat.id)
@@ -647,6 +648,7 @@ const { isInWishlist, toggleWishlist } = useWishlist();
   justify-content: center;
   position: relative;
   transition: transform 0.25s ease-out;
+  flex-shrink: 0;
 }
 
 .expand-icon {

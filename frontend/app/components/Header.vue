@@ -12,27 +12,21 @@
                   <li class="language" @click="isLangOpen = !isLangOpen" @mouseleave="isLangOpen = false" style="cursor: pointer; position: relative; display: inline-flex; align-items: center; white-space: nowrap;">
                     <span style="margin-right: 5px;">{{ locale === 'uk' ? 'Мова:' : 'Language:' }}</span>
                     <!-- Pure CSS Ukrainian Flag -->
-                    <span v-if="locale === 'uk'" class="d-inline-flex border" style="width: 16px; height: 10px; margin-right: 5px; flex-direction: column; overflow: hidden; vertical-align: middle; line-height: 1;">
-                      <span style="height: 5px; width: 100%; background: #0057B7; display: block;"></span>
-                      <span style="height: 5px; width: 100%; background: #FFD700; display: block;"></span>
-                    </span>
+                    <span v-if="locale === 'uk'" class="border" style="width: 16px; height: 10px; margin-right: 5px; display: inline-block; background: linear-gradient(to bottom, #0057B7 50%, #FFD700 50%); vertical-align: middle;"></span>
                     <img v-else src="/assets/img/icon/en.png" alt="English" style="width: 16px; height: 11px; margin-right: 5px; vertical-align: middle;">
-                    {{ locale === 'uk' ? 'Українська' : 'English' }}
+                    <span>{{ locale === 'uk' ? 'Українська' : 'English' }}</span>
                     <i class="fa fa-angle-down" style="margin-left: 5px;"></i>
                     <ul class="dropdown-list" :class="{ 'show': isLangOpen }" style="white-space: nowrap;">
                       <li>
                         <a href="#" @click.prevent="setLocale('uk')" style="display: inline-flex; align-items: center;">
-                          <span class="d-inline-flex border" style="width: 16px; height: 10px; margin-right: 5px; flex-direction: column; overflow: hidden; vertical-align: middle; line-height: 1;">
-                            <span style="height: 5px; width: 100%; background: #0057B7; display: block;"></span>
-                            <span style="height: 5px; width: 100%; background: #FFD700; display: block;"></span>
-                          </span>
-                          Українська
+                          <span class="border" style="width: 16px; height: 10px; margin-right: 5px; display: inline-block; background: linear-gradient(to bottom, #0057B7 50%, #FFD700 50%); vertical-align: middle;"></span>
+                          <span>Українська</span>
                         </a>
                       </li>
                       <li>
                         <a href="#" @click.prevent="setLocale('en')" style="display: inline-flex; align-items: center;">
                           <img src="/assets/img/icon/en.png" alt="English" style="width: 16px; height: 11px; margin-right: 5px; vertical-align: middle;">
-                          English
+                          <span>English</span>
                         </a>
                       </li>
                     </ul>
