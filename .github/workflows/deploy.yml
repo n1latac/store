@@ -44,19 +44,25 @@ jobs:
       # ==========================================
       # 📤 СИНХРОНИЗАЦИЯ И ДЕПЛОЙ НА СЕРВЕР
       # ==========================================
+      - name: Validate Secrets
+        run: |
+          if [ -z "${{ secrets.SSH_HOST }}" ]; then echo "❌ Error: SSH_HOST secret is empty!"; exit 1; fi
+          if [ -z "${{ secrets.SSH_USER }}" ]; then echo "❌ Error: SSH_USER secret is empty!"; exit 1; fi
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then echo "❌ Error: SSH_PRIVATE_KEY secret is empty!"; exit 1; fi
+
+      - name: Install SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Sync and Reload on Server
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SERVER_PATH: "/var/www/store"
         run: |
-          # Создаем папку SSH и записываем приватный ключ
+          # Создаем папку SSH и сканируем публичный ключ сервера
           mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          
-          # Сканируем публичный ключ сервера, чтобы избежать запроса подтверждения
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
           
           # Синхронизируем файлы
