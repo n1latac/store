@@ -120,7 +120,7 @@ export class ProductsService {
       where: whereClause,
       include: [
         { association: 'category' },
-        { association: 'images' }
+        { association: 'images', separate: true }
       ],
       order: [['id', 'DESC']], // Свежие товары сверху
       subQuery: false,
