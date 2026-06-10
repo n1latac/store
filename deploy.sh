@@ -26,6 +26,7 @@ npm run build
 
 echo "--- Сборка Фронтенда (Nuxt) ---"
 cd frontend
+rm -rf .nuxt .output
 NUXT_PUBLIC_API_BASE=https://aivixtech.com/api pnpm build
 cd ..
 
