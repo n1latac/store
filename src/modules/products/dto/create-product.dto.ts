@@ -30,4 +30,12 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   image_url?: string;
+
+  @IsString()
+  @IsOptional()
+  description_uk?: string;
+
+  @IsString()
+  @IsOptional()
+  description_en?: string;
 }

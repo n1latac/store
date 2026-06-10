@@ -85,12 +85,21 @@ export class ProductsController {
       throw new BadRequestException('Файлы не предоставлены');
     }
     // Передаем массив в сервис
-    return this.fileService.uploadMultipleProductImages(+id, files);
+    return this.productsService.uploadImages(+id, files);
   }
 
   @Delete('image/:imageId')
   @UseGuards(JwtAuthGuard)
   removeImage(@Param('imageId') imageId: string) {
-    return this.fileService.removeProductImage(+imageId);
+    return this.productsService.removeImage(+imageId);
+  }
+
+  @Patch(':productId/image/:imageId/main')
+  @UseGuards(JwtAuthGuard)
+  setMainImage(
+    @Param('productId') productId: string,
+    @Param('imageId') imageId: string,
+  ) {
+    return this.productsService.setMainImage(+productId, +imageId);
   }
 }

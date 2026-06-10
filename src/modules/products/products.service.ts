@@ -4,11 +4,17 @@ import { Product } from '../../database/models/Product';
 import { Category } from '../../database/models/Category';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductImage } from '../../database/models/ProductImages';
+import { FilesService } from '../files/files.service';
 import { Op, Sequelize } from 'sequelize';
 
 @Injectable()
 export class ProductsService {
-  constructor(@InjectModel(Product) private productRepo: typeof Product) {}
+  constructor(
+    @InjectModel(Product) private productRepo: typeof Product,
+    @InjectModel(ProductImage) private productImageRepo: typeof ProductImage,
+    private fileService: FilesService,
+  ) {}
 
   async create(dto: CreateProductDto): Promise<Product> {
     return this.productRepo.create(dto as any);
@@ -147,5 +153,88 @@ export class ProductsService {
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
     await product.destroy();
+  }
+
+  async uploadImages(
+    productId: number,
+    files: Array<Express.Multer.File>,
+  ): Promise<ProductImage[]> {
+    const product = await this.findOne(productId);
+    
+    // Check if there was already a main image before uploading
+    const hasMainImage = await this.productImageRepo.findOne({
+      where: { product_id: productId, is_main: true }
+    });
+
+    const uploadedImages = await this.fileService.uploadMultipleProductImages(productId, files);
+
+    if (uploadedImages.length > 0 && !hasMainImage) {
+      // Set the first of the newly uploaded images as main
+      const firstImage = uploadedImages[0];
+      await firstImage.update({ is_main: true });
+      await product.update({ image_url: firstImage.image_url });
+    }
+
+    return this.productImageRepo.findAll({
+      where: { product_id: productId },
+      order: [['id', 'ASC']],
+    });
+  }
+
+  async removeImage(imageId: number): Promise<void> {
+    const image = await this.productImageRepo.findByPk(imageId);
+    if (!image) {
+      throw new NotFoundException('Картинка не найдена в базе');
+    }
+
+    const productId = image.product_id;
+    const wasMain = image.is_main;
+
+    // Delete physically and from db via fileService
+    await this.fileService.removeProductImage(imageId);
+
+    // If it was the main image, we need to promote another one (if any exists)
+    if (wasMain) {
+      const remainingImages = await this.productImageRepo.findAll({
+        where: { product_id: productId },
+        order: [['id', 'ASC']],
+      });
+
+      const product = await this.productRepo.findByPk(productId);
+      if (product) {
+        if (remainingImages.length > 0) {
+          const newMain = remainingImages[0];
+          await newMain.update({ is_main: true });
+          await product.update({ image_url: newMain.image_url });
+        } else {
+          await product.update({ image_url: null });
+        }
+      }
+    }
+  }
+
+  async setMainImage(productId: number, imageId: number): Promise<Product> {
+    const product = await this.findOne(productId);
+    const targetImage = await this.productImageRepo.findOne({
+      where: { id: imageId, product_id: productId },
+    });
+
+    if (!targetImage) {
+      throw new NotFoundException('Изображение для данного товара не найдено');
+    }
+
+    // Set is_main = false for all other images of this product
+    await this.productImageRepo.update(
+      { is_main: false },
+      { where: { product_id: productId } },
+    );
+
+    // Set is_main = true for the target image
+    await targetImage.update({ is_main: true });
+
+    // Update product's main image_url
+    await product.update({ image_url: targetImage.image_url });
+
+    return this.findOne(productId);
   }
 }

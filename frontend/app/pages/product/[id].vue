@@ -31,13 +31,16 @@
               <div class="row">
                 <div class="col-lg-6">
                   <!-- Product Image Gallery -->
-                  <div class="product-large-slider-wrapper">
-                    <img 
-                      :src="selectedImage || '/assets/img/product/product-or-1.jpg'" 
-                      alt="Product Image" 
-                      class="img-fluid main-product-image border rounded"
-                    >
-                  </div>
+                  <div class="product-large-slider-wrapper cursor-pointer position-relative" @click="openLightbox">
+                     <img 
+                       :src="selectedImage || '/assets/img/product/product-or-1.jpg'" 
+                       alt="Product Image" 
+                       class="img-fluid main-product-image border rounded"
+                     >
+                     <div class="zoom-icon-overlay">
+                       <i class="ion-android-search"></i>
+                     </div>
+                   </div>
                   <!-- Thumbnails -->
                   <div v-if="product.images && product.images.length > 0" class="pro-nav-thumbnails mt-3 d-flex overflow-auto">
                     <div 
@@ -66,9 +69,9 @@
                       <span class="price-regular">{{ product.price }} ₴</span>
                     </div>
 
-                    <div class="product-description-brief mb-4 text-muted">
-                      {{ locale === 'uk' ? 'Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.' : 'You can find the technical specifications of this product in the table below. The product is available for purchase.' }}
-                    </div>
+                    <div class="product-description-brief mb-4 text-muted" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                       {{ locale === 'uk' ? (product.description_uk || 'Характеристики цього товару можна подивитися в таблиці нижче. Товар доступний для купівлі.') : (product.description_en || product.description_uk || 'You can find the technical specifications of this product in the table below. The product is available for purchase.') }}
+                     </div>
 
                     <!-- Quantity and actions -->
                     <div class="quantity-add-cart d-flex align-items-center mb-4">
@@ -174,11 +177,16 @@
 
                       <!-- Description tab -->
                       <div v-if="activeTab === 'description'" class="tab-pane fade show active">
-                        <div class="product-description-full text-muted">
-                          <p>
-                            {{ locale === 'uk' ? 'Оригінальний продукт ' + product.name_uk + '. Відповідає всім міжнародним стандартам якості та комплектується офіційною гарантією.' : 'Original product ' + (product.name_en || product.name_uk) + '. Meets all international quality standards and comes with an official warranty.' }}
-                          </p>
-                          <p v-if="product.attributes?.external_link">
+                        <div class="product-description-full text-muted" style="white-space: pre-wrap;">
+                          <div v-if="locale === 'uk' ? product.description_uk : (product.description_en || product.description_uk)">
+                            {{ locale === 'uk' ? product.description_uk : (product.description_en || product.description_uk) }}
+                          </div>
+                          <div v-else>
+                            <p>
+                              {{ locale === 'uk' ? 'Оригінальний продукт ' + product.name_uk + '. Відповідає всім міжнародним стандартам якості та комплектується офіційною гарантією.' : 'Original product ' + (product.name_en || product.name_uk) + '. Meets all international quality standards and comes with an official warranty.' }}
+                            </p>
+                          </div>
+                          <p v-if="product.attributes?.external_link" class="mt-3">
                             {{ locale === 'uk' ? 'Ви можете ознайомитися з усіма деталями, відгуками та оглядами на першоджерелі:' : 'You can read all the details, reviews, and specs on the original source:' }}
                             <a :href="product.attributes.external_link" target="_blank">{{ product.attributes.external_link }}</a>
                           </p>
@@ -216,11 +224,72 @@
       </div>
     </main>
     <!-- page main wrapper end -->
+
+    <!-- Lightbox Modal -->
+    <Transition name="lightbox-fade">
+      <div v-if="isLightboxOpen && product.images && product.images.length > 0" class="lightbox-modal" @click.self="closeLightbox">
+        <!-- Close Button -->
+        <button class="lightbox-close" @click="closeLightbox" aria-label="Close">
+          &times;
+        </button>
+        
+        <!-- Navigation Buttons -->
+        <button 
+          v-if="product.images.length > 1" 
+          class="lightbox-nav lightbox-prev" 
+          @click="prevLightboxImage" 
+          aria-label="Previous"
+        >
+          &#10094;
+        </button>
+        
+        <button 
+          v-if="product.images.length > 1" 
+          class="lightbox-nav lightbox-next" 
+          @click="nextLightboxImage" 
+          aria-label="Next"
+        >
+          &#10095;
+        </button>
+        
+        <!-- Main Lightbox Image Wrapper -->
+        <div class="lightbox-content-wrapper">
+          <div class="lightbox-main-container">
+            <Transition name="lightbox-zoom" mode="out-in">
+              <img 
+                :key="lightboxIndex" 
+                :src="product.images[lightboxIndex].image_url" 
+                class="lightbox-main-image" 
+                alt="Product Gallery Large View"
+              />
+            </Transition>
+          </div>
+          
+          <!-- Lightbox Counter / Details -->
+          <div class="lightbox-caption">
+            {{ lightboxIndex + 1 }} / {{ product.images.length }}
+          </div>
+          
+          <!-- Lightbox Thumbnails Grid -->
+          <div v-if="product.images.length > 1" class="lightbox-thumbnails">
+            <div 
+              v-for="(img, idx) in product.images" 
+              :key="img.id"
+              class="lightbox-thumb-wrapper"
+              :class="{ active: lightboxIndex === Number(idx) }"
+              @click="lightboxIndex = Number(idx)"
+            >
+              <img :src="img.image_url" class="lightbox-thumb-image" alt="Thumbnail" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCart } from '~/composables/useCart';
 import { useWishlist } from '~/composables/useWishlist';
@@ -252,9 +321,54 @@ const relatedProducts = computed(() => {
 const selectedImage = ref('');
 watch(product, (newVal) => {
   if (newVal) {
-    selectedImage.value = newVal.image_url;
+    // If image_url is empty, fallback to the first thumbnail image from images array
+    selectedImage.value = newVal.image_url || (newVal.images && newVal.images.length > 0 ? newVal.images[0].image_url : '');
   }
 }, { immediate: true });
+
+// Lightbox state & methods
+const isLightboxOpen = ref(false);
+const lightboxIndex = ref(0);
+
+const openLightbox = () => {
+  if (!product.value?.images || product.value.images.length === 0) return;
+  const idx = product.value.images.findIndex((img: any) => img.image_url === selectedImage.value);
+  lightboxIndex.value = idx !== -1 ? idx : 0;
+  isLightboxOpen.value = true;
+};
+
+const closeLightbox = () => {
+  isLightboxOpen.value = false;
+};
+
+const prevLightboxImage = () => {
+  if (!product.value?.images || product.value.images.length === 0) return;
+  lightboxIndex.value = (lightboxIndex.value - 1 + product.value.images.length) % product.value.images.length;
+};
+
+const nextLightboxImage = () => {
+  if (!product.value?.images || product.value.images.length === 0) return;
+  lightboxIndex.value = (lightboxIndex.value + 1) % product.value.images.length;
+};
+
+const handleKeyDown = (e: KeyboardEvent) => {
+  if (!isLightboxOpen.value) return;
+  if (e.key === 'ArrowLeft') {
+    prevLightboxImage();
+  } else if (e.key === 'ArrowRight') {
+    nextLightboxImage();
+  } else if (e.key === 'Escape') {
+    closeLightbox();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 
 // Tabs state
 const activeTab = ref('specs');
@@ -334,5 +448,216 @@ const handleAddToCart = () => {
 }
 .related-title {
   font-size: 14px;
+}
+
+/* Lightbox styles */
+.product-large-slider-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.product-large-slider-wrapper:hover .zoom-icon-overlay {
+  opacity: 1;
+}
+.zoom-icon-overlay {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+.lightbox-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 45px;
+  font-weight: 300;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 100001;
+}
+
+.lightbox-close:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24px;
+  padding: 18px 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100000;
+  user-select: none;
+}
+
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lightbox-prev {
+  left: 30px;
+}
+
+.lightbox-next {
+  right: 30px;
+}
+
+.lightbox-content-wrapper {
+  max-width: 90%;
+  max-height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  height: 60vh;
+}
+
+.lightbox-main-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.lightbox-caption {
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 15px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.lightbox-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 5px;
+  scrollbar-width: thin;
+}
+
+.lightbox-thumb-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  opacity: 0.5;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.lightbox-thumb-wrapper:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.lightbox-thumb-wrapper.active {
+  border-color: #00DC82;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.lightbox-thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 2px;
+}
+
+/* Transition animations */
+.lightbox-fade-enter-active,
+.lightbox-fade-leave-active {
+  transition: opacity 0.35s ease;
+}
+
+.lightbox-fade-enter-from,
+.lightbox-fade-leave-to {
+  opacity: 0;
+}
+
+.lightbox-zoom-enter-active,
+.lightbox-zoom-leave-active {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+}
+
+.lightbox-zoom-enter-from {
+  transform: scale(0.92);
+  opacity: 0;
+}
+
+.lightbox-zoom-leave-to {
+  transform: scale(1.05);
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .lightbox-nav {
+    padding: 12px 18px;
+    font-size: 18px;
+  }
+  .lightbox-prev {
+    left: 15px;
+  }
+  .lightbox-next {
+    right: 15px;
+  }
+  .lightbox-main-container {
+    height: 50vh;
+  }
 }
 </style>

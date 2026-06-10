@@ -179,6 +179,16 @@
             </UFormField>
           </div>
 
+          <div class="grid grid-cols-2 gap-4">
+            <UFormField label="Опис (UA)" name="description_uk">
+              <UTextarea v-model="formState.description_uk" placeholder="Опис товару українською..." class="w-full" size="md" :rows="3" />
+            </UFormField>
+
+            <UFormField label="Опис (EN)" name="description_en">
+              <UTextarea v-model="formState.description_en" placeholder="Product description in English..." class="w-full" size="md" :rows="3" />
+            </UFormField>
+          </div>
+
           <!-- Dynamic Attributes (Характеристики) -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -215,13 +225,34 @@
                 class="relative aspect-square rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden group"
               >
                 <img :src="img.image_url" class="object-cover w-full h-full" />
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-150">
+                
+                <!-- Main image badge -->
+                <div
+                  v-if="img.is_main"
+                  class="absolute top-1 left-1 bg-primary-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow z-10"
+                >
+                  Головна
+                </div>
+
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition-opacity duration-150">
+                  <UButton
+                    v-if="!img.is_main"
+                    icon="i-lucide-star"
+                    color="warning"
+                    size="sm"
+                    variant="solid"
+                    type="button"
+                    title="Зробити головною"
+                    :loading="settingMainImageId === img.id"
+                    @click.stop="setAsMainImage(img.id)"
+                  />
                   <UButton
                     icon="i-lucide-trash-2"
                     color="error"
                     size="sm"
                     variant="solid"
                     type="button"
+                    title="Видалити зображення"
                     :loading="deletingImageId === img.id"
                     @click.stop="deleteExistingImage(img.id)"
                   />
@@ -380,14 +411,17 @@ const isOpen = ref(false);
 const submitting = ref(false);
 const deletingId = ref<number | null>(null);
 const editId = ref<number | null>(null);
-const currentImages = ref<Array<{ id: number, image_url: string }>>([]);
+const currentImages = ref<Array<{ id: number, image_url: string, is_main: boolean }>>([]);
 const deletingImageId = ref<number | null>(null);
+const settingMainImageId = ref<number | null>(null);
 
 const formState = reactive({
   name_uk: '',
   name_en: '',
   price: undefined as number | undefined,
   category_id: '',
+  description_uk: '',
+  description_en: '',
 });
 
 // Dynamic Specifications
@@ -469,6 +503,8 @@ const openCreateModal = () => {
   formState.name_en = '';
   formState.price = undefined;
   formState.category_id = '';
+  formState.description_uk = '';
+  formState.description_en = '';
   dynamicAttrs.value = [];
   
   // Clear file lists
@@ -485,6 +521,8 @@ const openEditModal = (product: any) => {
   formState.name_en = product.name_en;
   formState.price = product.price;
   formState.category_id = String(product.category_id);
+  formState.description_uk = product.description_uk || '';
+  formState.description_en = product.description_en || '';
   dynamicAttrs.value = Object.entries(product.attributes || {}).map(([key, value]) => ({ key, value: String(value) }));
   
   // Clear file lists
@@ -492,6 +530,54 @@ const openEditModal = (product: any) => {
   uploadFiles.value = [];
   
   isOpen.value = true;
+};
+
+// Helper to reload product details to sync images/main flags
+const refreshProductDetail = async () => {
+  if (!editId.value) return;
+  try {
+    const product = await $fetch<any>(`${apiBase}/products/${editId.value}`);
+    if (product) {
+      currentImages.value = [...(product.images || [])];
+    }
+  } catch (error) {
+    console.error('Failed to refresh product detail:', error);
+  }
+};
+
+// Set image as main
+const setAsMainImage = async (imageId: number) => {
+  if (!editId.value) return;
+  settingMainImageId.value = imageId;
+
+  try {
+    const { token } = useAuth();
+    await $fetch(`${apiBase}/products/${editId.value}/image/${imageId}/main`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    });
+
+    toast.add({
+      title: 'Успішно',
+      description: 'Зображення встановлено як головне',
+      color: 'success',
+    });
+
+    await refreshProductDetail();
+    await refresh();
+  } catch (error: any) {
+    console.error(error);
+    const msg = error.data?.message || 'Не вдалося зробити зображення головним';
+    toast.add({
+      title: 'Помилка',
+      description: msg,
+      color: 'error',
+    });
+  } finally {
+    settingMainImageId.value = null;
+  }
 };
 
 // Delete existing product image immediately
@@ -508,17 +594,13 @@ const deleteExistingImage = async (imageId: number) => {
       },
     });
 
-    const index = currentImages.value.findIndex((img) => img.id === imageId);
-    if (index !== -1) {
-      currentImages.value.splice(index, 1);
-    }
-
     toast.add({
       title: 'Успішно',
       description: 'Зображення видалено',
       color: 'success',
     });
 
+    await refreshProductDetail();
     await refresh();
   } catch (error: any) {
     console.error(error);
@@ -557,6 +639,8 @@ const onSubmit = async () => {
       price: Number(formState.price),
       category_id: Number(formState.category_id),
       attributes: attributesObj,
+      description_uk: formState.description_uk,
+      description_en: formState.description_en,
     };
 
     const { token } = useAuth();

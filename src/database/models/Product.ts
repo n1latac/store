@@ -42,6 +42,12 @@ export class Product extends Model<Product> {
   @Column({ type: DataType.JSONB, defaultValue: {} })
   attributes: Record<string, any>;
 
+  @Column({ type: DataType.TEXT, allowNull: true })
+  description_uk: string;
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  description_en: string;
+
   // --- СВЯЗЬ С КАТЕГОРИЕЙ --- //
 
   // Физическая колонка в базе данных

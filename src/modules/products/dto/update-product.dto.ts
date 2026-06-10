@@ -24,4 +24,12 @@ export class UpdateProductDto {
   @IsString({ message: 'Ссылка на изображение должна быть строкой' })
   @IsOptional()
   image_url?: string;
+
+  @IsString({ message: 'Описание должно быть строкой' })
+  @IsOptional()
+  description_uk?: string;
+
+  @IsString({ message: 'Описание должно быть строкой' })
+  @IsOptional()
+  description_en?: string;
 }
