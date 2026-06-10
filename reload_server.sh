@@ -3,25 +3,20 @@
 # Exit immediately if any command fails
 set -e
 
-echo "🚀 Starting deployment and reload process..."
-
-# 1. Pull the latest code from GitHub
-echo "📥 Pulling latest changes from Git..."
-git pull origin main
+echo "🚀 Running post-deployment tasks on server..."
 
 # ==========================================
-# 🖥️ BACKEND DEPLOYMENT (NestJS)
+# 🖥️ BACKEND POST-DEPLOY (NestJS)
 # ==========================================
 echo "--- Updating Backend ---"
-echo "📦 Installing backend dependencies..."
-npm install
-
-echo "🔨 Building NestJS application..."
-# Set memory limit to 3GB for Node process during compilation to avoid OOM
-NODE_OPTIONS="--max-old-space-size=3072" npm run build
+# Install only production dependencies (dev dependencies are not needed on server)
+npm install --omit=dev
 
 echo "🗄️ Running database migrations..."
 npm run migrate
+
+echo "🌱 Running database seeds (unrun only)..."
+npm run seed
 
 echo "🔄 Reloading backend in PM2..."
 if pm2 describe store-backend > /dev/null 2>&1; then
@@ -32,19 +27,10 @@ else
 fi
 
 # ==========================================
-# 🎨 FRONTEND DEPLOYMENT (Nuxt)
+# 🎨 FRONTEND POST-DEPLOY (Nuxt)
 # ==========================================
-echo "--- Updating Frontend ---"
-cd frontend
-
-echo "📦 Installing frontend dependencies..."
-pnpm install
-
-echo "🔨 Building Nuxt application..."
-# Nuxt/Vite builds are very heavy, we allocate up to 3GB of memory for compilation
-NODE_OPTIONS="--max-old-space-size=3072" pnpm build
-
-cd ..
+# Frontend requires zero node_modules or dependencies on the server to run.
+# It runs directly from the precompiled frontend/.output/ server bundle.
 
 echo "🔄 Reloading frontend in PM2..."
 if pm2 describe store-frontend > /dev/null 2>&1; then
@@ -54,4 +40,4 @@ else
     pm2 start frontend/.output/server/index.mjs --name "store-frontend" --env PORT=3000
 fi
 
-echo "✅ All services (Backend & Frontend) successfully updated and reloaded!"
+echo "✅ Deployment completed successfully!"

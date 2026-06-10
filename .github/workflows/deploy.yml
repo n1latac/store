@@ -1,0 +1,74 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      # ==========================================
+      # 🔨 СБОРКА БЭКЕНДА (NestJS)
+      # ==========================================
+      - name: Build Backend
+        run: |
+          npm install
+          npm run build
+
+      # ==========================================
+      # 🔨 СБОРКА ФРОНТЕНДА (Nuxt)
+      # ==========================================
+      - name: Build Frontend
+        run: |
+          cd frontend
+          pnpm install
+          pnpm build
+          cd ..
+
+      # ==========================================
+      # 📤 СИНХРОНИЗАЦИЯ И ДЕПЛОЙ НА СЕРВЕР
+      # ==========================================
+      - name: Sync and Reload on Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SERVER_PATH: "/var/www/store"
+        run: |
+          # Создаем папку SSH и записываем приватный ключ
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          # Сканируем публичный ключ сервера, чтобы избежать запроса подтверждения
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+          
+          # Синхронизируем файлы
+          rsync -avz --delete \
+            --exclude='node_modules' \
+            --exclude='frontend/node_modules' \
+            --exclude='frontend/.nuxt' \
+            --exclude='.git' \
+            --exclude='.idea' \
+            --exclude='.env' \
+            --exclude='frontend/.env' \
+            ./ "$SSH_USER@$SSH_HOST:$SERVER_PATH/"
+            
+          # Запускаем скрипт перезапуска на сервере
+          ssh "$SSH_USER@$SSH_HOST" "cd $SERVER_PATH && chmod +x reload_server.sh && ./reload_server.sh"

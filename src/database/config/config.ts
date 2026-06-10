@@ -9,6 +9,7 @@ const config = {
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
+    seederStorage: 'sequelize',
   },
   production: {
     username: process.env.DB_USER,
@@ -17,6 +18,7 @@ const config = {
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
+    seederStorage: 'sequelize',
     dialectOptions: {
       ssl: {
         require: true,
