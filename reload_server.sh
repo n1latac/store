@@ -32,6 +32,12 @@ fi
 # Frontend requires zero node_modules or dependencies on the server to run.
 # It runs directly from the precompiled frontend/.output/ server bundle.
 
+echo "🔄 Loading environment variables for Frontend..."
+if [ -f "frontend/.env" ]; then
+    # Load and export env variables from frontend/.env
+    export $(cat frontend/.env | grep -v '^#' | xargs)
+fi
+
 echo "🔄 Reloading frontend in PM2..."
 if pm2 describe store-frontend > /dev/null 2>&1; then
     pm2 reload store-frontend --update-env
