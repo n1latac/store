@@ -13,7 +13,7 @@ echo "--- Updating Backend ---"
 npm install --omit=dev
 
 echo "🗄️ Running database migrations..."
-npm run migrate
+npx sequelize-cli db:migrate
 
 echo "🌱 Running database seeds (unrun only)..."
 npm run seed
