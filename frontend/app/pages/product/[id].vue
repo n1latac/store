@@ -166,9 +166,9 @@
                               <td class="font-weight-bold">{{ locale === 'uk' ? 'Накопичувач' : 'Storage' }}</td>
                               <td>{{ product.attributes.storage }}</td>
                             </tr>
-                            <tr v-for="(val, key) in customSpecs" :key="key">
-                              <td class="font-weight-bold text-capitalize">{{ key }}</td>
-                              <td>{{ val }}</td>
+                            <tr v-for="spec in customSpecs" :key="spec.key">
+                              <td class="font-weight-bold text-capitalize">{{ spec.key }}</td>
+                              <td>{{ spec.value }}</td>
                             </tr>
                             <tr v-if="!hasSpecs">
                               <td colspan="2" class="text-center text-muted">{{ locale === 'uk' ? 'Характеристики відсутні' : 'No specifications available' }}</td>
@@ -386,20 +386,47 @@ const incQty = () => {
 
 // Specs computations
 const customSpecs = computed(() => {
-  if (!product.value?.attributes) return {};
-  const copy = { ...product.value.attributes };
-  // remove standard ones to prevent duplication in customSpecs loop
-  delete copy.external_link;
-  delete copy.brand;
-  delete copy.ram;
-  delete copy.storage;
-  return copy;
+  if (!product.value?.attributes) return [];
+  const attrs = product.value.attributes;
+  const order: string[] = attrs._spec_order || Object.keys(attrs);
+  const result: Array<{ key: string; value: string }> = [];
+
+  // load keys in order
+  order.forEach((key) => {
+    if (
+      key !== 'external_link' &&
+      key !== 'brand' &&
+      key !== 'ram' &&
+      key !== 'storage' &&
+      key !== '_spec_order' &&
+      attrs[key] !== undefined
+    ) {
+      result.push({ key, value: String(attrs[key]) });
+    }
+  });
+
+  // load any remaining keys not in order list
+  Object.keys(attrs).forEach((key) => {
+    if (
+      key !== 'external_link' &&
+      key !== 'brand' &&
+      key !== 'ram' &&
+      key !== 'storage' &&
+      key !== '_spec_order' &&
+      !order.includes(key) &&
+      attrs[key] !== undefined
+    ) {
+      result.push({ key, value: String(attrs[key]) });
+    }
+  });
+
+  return result;
 });
 
 const hasSpecs = computed(() => {
   const attrs = product.value?.attributes;
   if (!attrs) return false;
-  return Object.keys(attrs).some(k => k !== 'external_link');
+  return Object.keys(attrs).some(k => k !== 'external_link' && k !== '_spec_order');
 });
 
 // Cart & Wishlist actions

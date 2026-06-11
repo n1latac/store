@@ -35,6 +35,8 @@ jobs:
       # 🔨 СБОРКА ФРОНТЕНДА (Nuxt)
       # ==========================================
       - name: Build Frontend
+        env:
+          NUXT_PUBLIC_API_BASE: https://aivixtech.com/api
         run: |
           cd frontend
           pnpm install

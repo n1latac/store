@@ -547,7 +547,23 @@ const openEditModal = (product: any) => {
   formState.category_id = String(product.category_id);
   formState.description_uk = product.description_uk || '';
   formState.description_en = product.description_en || '';
-  dynamicAttrs.value = Object.entries(product.attributes || {}).map(([key, value]) => ({ key, value: String(value) }));
+  const attrs = product.attributes || {};
+  const order: string[] = attrs._spec_order || Object.keys(attrs);
+  const attrsList: Array<{ key: string; value: string }> = [];
+
+  // first, load keys in stored order
+  order.forEach((key) => {
+    if (key !== '_spec_order' && attrs[key] !== undefined) {
+      attrsList.push({ key, value: String(attrs[key]) });
+    }
+  });
+  // then load any remaining keys not in order array (just in case)
+  Object.keys(attrs).forEach((key) => {
+    if (key !== '_spec_order' && !order.includes(key) && attrs[key] !== undefined) {
+      attrsList.push({ key, value: String(attrs[key]) });
+    }
+  });
+  dynamicAttrs.value = attrsList;
   
   // Clear file lists
   uploadFiles.value.forEach((f) => URL.revokeObjectURL(f.previewUrl));
@@ -650,12 +666,17 @@ const onSubmit = async () => {
 
   try {
     // 1. Pack specifications
-    const attributesObj: Record<string, string> = {};
+    const attributesObj: Record<string, any> = {};
+    const specOrder: string[] = [];
     dynamicAttrs.value.forEach((attr) => {
-      if (attr.key && attr.value) {
-        attributesObj[attr.key] = attr.value;
+      const trimmedKey = attr.key ? attr.key.trim() : '';
+      const trimmedValue = attr.value ? attr.value.trim() : '';
+      if (trimmedKey && trimmedValue) {
+        attributesObj[trimmedKey] = trimmedValue;
+        specOrder.push(trimmedKey);
       }
     });
+    attributesObj._spec_order = specOrder;
 
     const productPayload = {
       name_uk: formState.name_uk,

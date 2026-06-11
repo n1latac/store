@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { ProductImage } from '../../database/models/ProductImages';
 import { InjectModel } from '@nestjs/sequelize';
+import sharp from 'sharp';
 
 @Injectable()
 export class FilesService {
@@ -33,16 +34,53 @@ export class FilesService {
     });
   }
 
+  private async compressImage(
+    file: Express.Multer.File,
+  ): Promise<{ buffer: Buffer; fileName: string; mimetype: string }> {
+    // Если это не картинка или это гифка (которую мы не хотим ломать), возвращаем как есть
+    if (!file.mimetype.startsWith('image/') || file.mimetype === 'image/gif') {
+      const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+      return { buffer: file.buffer, fileName, mimetype: file.mimetype };
+    }
+
+    try {
+      // Сжимаем изображение с помощью sharp:
+      // - Ограничиваем максимальную ширину/высоту в 1200px без растягивания меньших картинок
+      // - Конвертируем в формат WebP с качеством 82% (идеальный баланс без визуальных потерь)
+      const compressedBuffer = await sharp(file.buffer)
+        .resize({
+          width: 1200,
+          height: 1200,
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .webp({ quality: 82 })
+        .toBuffer();
+
+      const fileName = `${uuidv4()}.webp`;
+      return {
+        buffer: compressedBuffer,
+        fileName,
+        mimetype: 'image/webp',
+      };
+    } catch (err) {
+      console.error('Ошибка сжатия изображения с помощью sharp, загружаем оригинал:', err);
+      // В случае сбоя возвращаем оригинальный файл, чтобы загрузка не сломалась
+      const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+      return { buffer: file.buffer, fileName, mimetype: file.mimetype };
+    }
+  }
+
   async uploadFile(file: Express.Multer.File): Promise<string> {
     try {
-      const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+      const { buffer, fileName, mimetype } = await this.compressImage(file);
 
       await this.s3Client.send(
         new PutObjectCommand({
           Bucket: this.configService.get('S3_BUCKET_NAME'),
           Key: fileName,
-          Body: file.buffer,
-          ContentType: file.mimetype,
+          Body: buffer,
+          ContentType: mimetype,
         }),
       );
 
@@ -59,14 +97,14 @@ export class FilesService {
     try {
       // 1. Создаем массив задач (Promises) для параллельной загрузки в S3
       const uploadPromises = files.map(async (file) => {
-        const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+        const { buffer, fileName, mimetype } = await this.compressImage(file);
 
         await this.s3Client.send(
           new PutObjectCommand({
             Bucket: this.configService.get('S3_BUCKET_NAME'),
             Key: fileName,
-            Body: file.buffer,
-            ContentType: file.mimetype,
+            Body: buffer,
+            ContentType: mimetype,
           }),
         );
 
