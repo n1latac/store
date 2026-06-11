@@ -65,9 +65,17 @@
 
         <!-- Price Render -->
         <template #price-cell="{ row }">
-          <span class="font-semibold text-gray-900 dark:text-white">
-            {{ formatPrice(row.original.price) }} грн
-          </span>
+          <div class="flex flex-col gap-1">
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ formatPrice(row.original.price) }} грн
+            </span>
+            <span v-if="row.original.old_price" class="text-xs text-gray-400 line-through">
+              {{ formatPrice(row.original.old_price) }} грн
+            </span>
+            <UBadge v-if="row.original.is_deal" size="sm" color="warning" class="w-max">
+              Пропозиція тижня
+            </UBadge>
+          </div>
         </template>
 
         <!-- Attributes Render -->
@@ -168,6 +176,12 @@
               <UInput v-model.number="formState.price" type="number" placeholder="2500" class="w-full" size="md" />
             </UFormField>
 
+            <UFormField label="Стара ціна (грн) - для перекреслення" name="old_price">
+              <UInput v-model.number="formState.old_price" type="number" placeholder="3000" class="w-full" size="md" />
+            </UFormField>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
             <UFormField label="Категорія" name="category_id" required>
               <USelect
                 v-model="formState.category_id"
@@ -176,6 +190,10 @@
                 class="w-full"
                 size="md"
               />
+            </UFormField>
+
+            <UFormField label="Акційні пропозиції" name="is_deal" class="flex items-center pt-6">
+              <UCheckbox v-model="formState.is_deal" label="Показувати в Пропозиціях тижня" />
             </UFormField>
           </div>
 
@@ -419,6 +437,8 @@ const formState = reactive({
   name_uk: '',
   name_en: '',
   price: undefined as number | undefined,
+  old_price: undefined as number | undefined,
+  is_deal: false,
   category_id: '',
   description_uk: '',
   description_en: '',
@@ -502,6 +522,8 @@ const openCreateModal = () => {
   formState.name_uk = '';
   formState.name_en = '';
   formState.price = undefined;
+  formState.old_price = undefined;
+  formState.is_deal = false;
   formState.category_id = '';
   formState.description_uk = '';
   formState.description_en = '';
@@ -520,6 +542,8 @@ const openEditModal = (product: any) => {
   formState.name_uk = product.name_uk;
   formState.name_en = product.name_en;
   formState.price = product.price;
+  formState.old_price = product.old_price ? Number(product.old_price) : undefined;
+  formState.is_deal = !!product.is_deal;
   formState.category_id = String(product.category_id);
   formState.description_uk = product.description_uk || '';
   formState.description_en = product.description_en || '';
@@ -637,6 +661,8 @@ const onSubmit = async () => {
       name_uk: formState.name_uk,
       name_en: formState.name_en,
       price: Number(formState.price),
+      old_price: formState.old_price ? Number(formState.old_price) : null,
+      is_deal: formState.is_deal,
       category_id: Number(formState.category_id),
       attributes: attributesObj,
       description_uk: formState.description_uk,

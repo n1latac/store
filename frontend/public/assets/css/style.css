@@ -3115,12 +3115,16 @@ only screen and (max-width: 767.98px) {
     font-size: 15px;
     color: #999;
     padding-left: 4px;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .price-regular {
     font-size: 15px;
     line-height: 1;
     color: #cf0016;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 /*------- feature product item end -------*/

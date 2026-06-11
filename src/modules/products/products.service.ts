@@ -32,8 +32,13 @@ export class ProductsService {
     categoryId?: number;
     page?: number;
     limit?: number;
+    isDeal?: boolean;
   }): Promise<{ rows: Product[]; count: number } | Product[]> {
     const whereClause: any = {};
+
+    if (options?.isDeal !== undefined) {
+      whereClause.is_deal = options.isDeal;
+    }
 
     // Если передали фильтры, добавляем магию JSONB
     if (options?.filters && Object.keys(options.filters).length > 0) {

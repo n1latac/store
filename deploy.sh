@@ -36,13 +36,13 @@ cd ..
 echo "📤 Отправка файлов на сервер через rsync..."
 # Синхронизируем файлы, исключая папки зависимостей, кэш и локальные конфигурации env
 rsync -avz --delete \
-  --exclude='node_modules' \
-  --exclude='frontend/node_modules' \
-  --exclude='frontend/.nuxt' \
-  --exclude='.git' \
-  --exclude='.idea' \
-  --exclude='.env' \
-  --exclude='frontend/.env' \
+  --exclude='/node_modules' \
+  --exclude='/frontend/node_modules' \
+  --exclude='/frontend/.nuxt' \
+  --exclude='/.git' \
+  --exclude='/.idea' \
+  --exclude='/.env' \
+  --exclude='/frontend/.env' \
   ./ "$SERVER_USER@$SERVER_IP:$SERVER_PATH/"
 
 # ==========================================

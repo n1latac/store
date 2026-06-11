@@ -45,6 +45,7 @@ export class ProductsController {
     @Query('category_id') categoryId?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('is_deal') isDeal?: string,
   ) {
     let parsedFilters = {};
     if (filters) {
@@ -60,6 +61,7 @@ export class ProductsController {
       categoryId: categoryId ? +categoryId : undefined,
       page: page ? +page : undefined,
       limit: limit ? +limit : undefined,
+      isDeal: isDeal === 'true' ? true : isDeal === 'false' ? false : undefined,
     });
   }
 

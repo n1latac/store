@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsOptional,
   IsObject,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -38,4 +39,12 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   description_en?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_deal?: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  old_price?: number;
 }

@@ -227,7 +227,7 @@
             <div class="mobile-main-header">
               <div class="mobile-logo">
                 <NuxtLink to="/">
-                  <img src="/assets/img/logo/logo-black.svg" alt="Brand Logo">
+                  <img :src="isSticky ? '/assets/img/logo/logo-black.svg' : '/assets/img/logo/logo.svg'" alt="Brand Logo">
                 </NuxtLink>
               </div>
               <div class="mobile-menu-toggler">
@@ -498,5 +498,175 @@ const getProductImage = (product: any) => {
   color: #1891ac;
   font-weight: 600;
   margin-top: 4px;
+}
+
+/* --- Premium Modern Teal Gradient Header Styling --- */
+.header-top {
+  background: #106f85 !important; /* matches start of middle area gradient */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+.header-middle-area {
+  background: linear-gradient(to bottom, #106f85 0%, #1891ac 100%) !important; /* smooth vertical gradient integration */
+  border-bottom: none !important;
+}
+
+/* Header top settings & links (white text with cyan hover) */
+.header-top-settings ul li,
+.header-top-settings ul li span,
+.header-top-settings ul li i,
+.header-top-settings ul li img {
+  color: #ffffff !important;
+  cursor: pointer !important;
+}
+.header-top-settings ul li a {
+  color: #ffffff !important;
+}
+.header-top-settings ul li a:hover {
+  color: #00E5FF !important;
+}
+.header-top-settings ul li i {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.header-links ul li {
+  color: #ffffff !important;
+}
+.header-links ul li a {
+  color: #ffffff !important;
+  transition: color 0.2s ease;
+}
+.header-links ul li a:hover {
+  color: #00E5FF !important;
+  text-decoration: none !important;
+}
+
+/* Fix: Language switcher dropdown list links & text color inside the white modal */
+.header-top-settings ul li .dropdown-list a,
+.header-top-settings ul li .dropdown-list a span {
+  color: #333333 !important;
+  cursor: pointer !important;
+}
+.header-top-settings ul li .dropdown-list a:hover,
+.header-top-settings ul li .dropdown-list a:hover span {
+  color: #1891ac !important;
+}
+
+/* Desktop header links & support info */
+.support-info p {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+.support-info strong a {
+  color: #ffffff !important;
+  transition: color 0.2s ease;
+}
+.support-info strong a:hover {
+  color: #00E5FF !important;
+}
+.support-icon i {
+  color: #00E5FF !important;
+}
+.header-configure-area ul li a {
+  color: #ffffff !important;
+  transition: color 0.2s ease;
+}
+.header-configure-area ul li a:hover {
+  color: #00E5FF !important;
+}
+.header-configure-area ul li a .notify {
+  background-color: #00E5FF !important;
+  color: #0c4350 !important;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+
+/* Modern Glassmorphic Search box */
+:deep(.search-box-inner .search-field) {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease !important;
+}
+:deep(.search-box-inner .search-field::placeholder) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+:deep(.search-box-inner .search-field:focus) {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  border-color: #00E5FF !important;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25) !important;
+  outline: none;
+}
+:deep(.search-box-inner .search-btn) {
+  color: #00E5FF !important;
+  transition: all 0.2s ease;
+}
+:deep(.search-box-inner .search-btn:hover) {
+  color: #ffffff !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+/* Search suggestions dropdown on blue gradient theme */
+:deep(.search-suggestions-dropdown) {
+  background: #112833 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+  border-radius: 8px;
+}
+:deep(.suggestion-item) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+:deep(.suggestion-item:hover) {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+:deep(.suggestion-name) {
+  color: #ffffff !important;
+}
+:deep(.suggestion-price) {
+  color: #00E5FF !important;
+}
+:deep(.suggestion-img) {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: #153240 !important;
+}
+
+/* Mobile Header styling on blue gradient theme */
+.mobile-header {
+  background: linear-gradient(135deg, #106f85 0%, #1891ac 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+.mobile-header.is-sticky {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e1e4e8 !important;
+}
+.mobile-main-header .mobile-menu-toggler .off-canvas-btn {
+  color: #ffffff !important;
+  transition: color 0.2s ease;
+}
+.mobile-main-header .mobile-menu-toggler .off-canvas-btn:hover {
+  color: #00E5FF !important;
+}
+.mobile-main-header .mobile-menu-toggler .mini-cart-wrap a {
+  color: #ffffff !important;
+}
+.mobile-main-header .mobile-menu-toggler .mini-cart-wrap a:hover {
+  color: #00E5FF !important;
+}
+.mobile-main-header .mobile-menu-toggler .mini-cart-wrap a .notify {
+  background-color: #00E5FF !important;
+  color: #0c4350 !important;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+
+/* Mobile sticky state (light) overrides */
+.mobile-header.is-sticky .mobile-main-header .mobile-menu-toggler .off-canvas-btn {
+  color: #252525 !important;
+}
+.mobile-header.is-sticky .mobile-main-header .mobile-menu-toggler .mini-cart-wrap a {
+  color: #252525 !important;
+}
+.mobile-header.is-sticky .mobile-main-header .mobile-menu-toggler .mini-cart-wrap a .notify {
+  background-color: #252525 !important;
+  color: #ffffff !important;
+  box-shadow: none;
 }
 </style>

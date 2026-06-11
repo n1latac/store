@@ -272,6 +272,7 @@
                       </h5>
                       <div class="price-box">
                         <span class="price-regular">{{ product.price }} ₴</span>
+                        <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} ₴</del></span>
                       </div>
                       <p v-if="viewMode === 'list'" class="mt-2 text-muted">
                         {{ locale === 'uk' ? 'Натисніть кнопку нижче або перейдіть у детальний перегляд товару для вивчення характеристик.' : 'Click the button below or go to the details page to view detailed technical specifications.' }}

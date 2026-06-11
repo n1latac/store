@@ -68,6 +68,7 @@
                     
                     <div class="price-box mb-3">
                       <span class="price-regular">{{ product.price }} ₴</span>
+                      <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} ₴</del></span>
                     </div>
 
                     <div class="product-description-brief mb-4 text-muted">

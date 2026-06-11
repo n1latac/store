@@ -48,6 +48,12 @@ export class Product extends Model<Product> {
   @Column({ type: DataType.TEXT, allowNull: true })
   description_en: string;
 
+  @Column({ type: DataType.BOOLEAN, defaultValue: false, allowNull: false })
+  is_deal: boolean;
+
+  @Column({ type: DataType.DECIMAL(10, 2), allowNull: true })
+  old_price: number;
+
   // --- СВЯЗЬ С КАТЕГОРИЕЙ --- //
 
   // Физическая колонка в базе данных

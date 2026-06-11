@@ -98,12 +98,20 @@
             </div>
             <div class="row">
               <div class="col-12">
-                <div class="deals-item-wrapper">
-                  <div class="row row-15">
+                <div class="deals-carousel-container">
+                  <!-- Navigation buttons -->
+                  <button class="carousel-nav-btn prev" @click="scrollDeals('left')" aria-label="Previous">
+                    <i class="ion-ios-arrow-left"></i>
+                  </button>
+                  <button class="carousel-nav-btn next" @click="scrollDeals('right')" aria-label="Next">
+                    <i class="ion-ios-arrow-right"></i>
+                  </button>
+                  
+                  <div class="deals-slider-track" ref="dealsSliderRef">
                     <div 
                       v-for="product in dealsProducts" 
                       :key="product.id" 
-                      class="col-xl-3 col-lg-4 col-sm-6 mb-4"
+                      class="deals-item-col mb-4"
                     >
                       <div class="deals-item">
                         <div class="deals-thumb">
@@ -122,26 +130,21 @@
                           </div>
                         </div>
                         <div class="deals-content">
-                          <div class="ratings">
-                            <span><i class="ion-android-star text-warning"></i></span>
-                            <span><i class="ion-android-star text-warning"></i></span>
-                            <span><i class="ion-android-star text-warning"></i></span>
-                            <span><i class="ion-android-star text-warning"></i></span>
-                            <span><i class="ion-android-star text-warning"></i></span>
-                          </div>
                           <h4 class="product-name">
                             <NuxtLink :to="`/product/${product.id}`">
                               {{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}
                             </NuxtLink>
                           </h4>
-                          <div class="price-box">
-                            <span class="price-regular">{{ product.price }} ₴</span>
-                            <span class="price-old"><del>{{ getOldPrice(product.price) }} ₴</del></span>
-                          </div>
-                          <a class="btn btn-cart mt-2" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
-                          <div class="product-countdown mt-2 font-weight-bold text-info" style="font-size: 13px;">
-                            <i class="ion-android-alarm-clock mr-1"></i>
-                            {{ locale === 'uk' ? 'Акція діє до кінця тижня' : 'Sale ends this week' }}
+                          <div class="mt-auto">
+                            <div class="price-box">
+                              <span class="price-regular">{{ product.price }} ₴</span>
+                              <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} ₴</del></span>
+                            </div>
+                            <a class="btn btn-cart mt-2" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
+                            <div class="product-countdown mt-2 font-weight-bold text-info" style="font-size: 13px;">
+                              <i class="ion-android-alarm-clock mr-1"></i>
+                              {{ locale === 'uk' ? 'Акція діє до кінця тижня' : 'Sale ends this week' }}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -155,21 +158,21 @@
       </section>
       <!-- deals area end -->
 
-      <!-- banner statistics start -->
+      <!-- banner statistics start 
       <div class="banner-statistics-area pt-50">
         <div class="container">
           <div class="row">
             <div class="col-12">
               <div class="img-container">
                 <NuxtLink to="/shop">
-                  <img src="/assets/img/banner/img1_home.jpg" alt="Banner 1" class="w-100 rounded">
+                  <img src="/assets/img/banner/tech_wide_banner.png" alt="Banner 1" class="w-100 rounded">
                 </NuxtLink>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- banner statistics end -->
+      banner statistics end -->
 
       <!-- features categories area start 1 (Personal Computers) -->
       <section class="features-categories-area pt-50" v-if="catComputers">
@@ -208,13 +211,13 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-9">
+              <div class="col-12">
                 <div class="products-area-wrapper mt-30">
                   <div class="row" v-if="productsCat1.length > 0">
                     <div 
                       v-for="product in productsCat1" 
                       :key="product.id" 
-                      class="col-lg-4 col-sm-6"
+                      class="col-xl-3 col-lg-4 col-sm-6 mb-4"
                     >
                       <!-- Product Card -->
                       <div class="product-item">
@@ -253,19 +256,6 @@
                   <div v-else class="text-center py-5 text-muted">
                     {{ locale === 'uk' ? 'Товарів не знайдено' : 'No products found' }}
                   </div>
-                  <!-- bottom banner -->
-                  <div class="img-container mt-30">
-                    <NuxtLink to="/shop">
-                      <img src="/assets/img/banner/ca1_bottom.jpg" alt="" class="w-100 rounded">
-                    </NuxtLink>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="section-banner mt-30">
-                  <NuxtLink to="/shop">
-                    <img src="/assets/img/banner/ca1.jpg" alt="" class="w-100 rounded">
-                  </NuxtLink>
                 </div>
               </div>
             </div>
@@ -274,111 +264,8 @@
       </section>
       <!-- features categories area end 1 -->
 
-      <!-- features categories area start 2 (Laptops) -->
-      <section class="features-categories-area pt-50" v-if="catLaptops">
-        <div class="container">
-          <div class="section-wrapper bg-white">
-            <div class="row">
-              <div class="col-12">
-                <div class="section-header">
-                  <!-- section title start -->
-                  <div class="section-title">
-                    <h4>{{ locale === 'uk' ? catLaptops.name_uk : (catLaptops.name_en || catLaptops.name_uk) }}</h4>
-                  </div>
-                  <!-- section title start -->
-
-                  <!-- product tab menu start -->
-                  <div class="feature-menu">
-                    <ul class="nav justify-content-start justify-content-lg-end">
-                      <li>
-                        <a 
-                          href="#" 
-                          :class="{ active: activeCatTab2 === 'all' }" 
-                          @click.prevent="activeCatTab2 = 'all'"
-                        >{{ locale === 'uk' ? 'Усі товари' : 'All Products' }}</a>
-                      </li>
-                      <li v-for="sub in subCatsLaptops" :key="sub.id">
-                        <a 
-                          href="#" 
-                          :class="{ active: activeCatTab2 === sub.id }" 
-                          @click.prevent="activeCatTab2 = sub.id"
-                        >{{ locale === 'uk' ? sub.name_uk : (sub.name_en || sub.name_uk) }}</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- product tab menu start -->
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-9">
-                <div class="products-area-wrapper mt-30">
-                  <div class="row" v-if="productsCat2.length > 0">
-                    <div 
-                      v-for="product in productsCat2" 
-                      :key="product.id" 
-                      class="col-lg-4 col-sm-6"
-                    >
-                      <!-- Product Card -->
-                      <div class="product-item">
-                        <div class="product-thumb">
-                          <NuxtLink :to="`/product/${product.id}`">
-                            <img :src="product.image_url || '/assets/img/product/product-or-1.jpg'" alt="" class="product-img">
-                          </NuxtLink>
-                          <div class="add-to-links">
-                            <a 
-                              href="#" 
-                              @click.prevent="toggleWishlist(product)" 
-                              :title="isInWishlist(product.id) ? 'Видалити з обраного' : 'В обране'"
-                            >
-                              <i :class="isInWishlist(product.id) ? 'ion-android-favorite' : 'ion-android-favorite-outline'"></i>
-                            </a>
-                            <NuxtLink :to="`/product/${product.id}`" title="Перегляд"><i class="ion-eye"></i></NuxtLink>
-                          </div>
-                        </div>
-                        <div class="product-content">
-                          <div class="product-category">
-                            <NuxtLink :to="`/shop?category=${product.category_id}`">{{ locale === 'uk' ? product.category?.name_uk : (product.category?.name_en || product.category?.name_uk) }}</NuxtLink>
-                          </div>
-                          <h5 class="product-name">
-                            <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
-                          </h5>
-                          <div class="price-box">
-                            <span class="price-regular">{{ product.price }} ₴</span>
-                          </div>
-                          <div class="product-item-action">
-                            <a class="btn btn-cart" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div v-else class="text-center py-5 text-muted">
-                    {{ locale === 'uk' ? 'Товарів не знайдено' : 'No products found' }}
-                  </div>
-                  <!-- bottom banner -->
-                  <div class="img-container mt-30">
-                    <NuxtLink to="/shop">
-                      <img src="/assets/img/banner/ca2_bottom.jpg" alt="" class="w-100 rounded">
-                    </NuxtLink>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="section-banner mt-30">
-                  <NuxtLink to="/shop">
-                    <img src="/assets/img/banner/ca2.jpg" alt="" class="w-100 rounded">
-                  </NuxtLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- features categories area end 2 -->
-
       <!-- group list product area start -->
-      <section class="group-list-product-area pt-50" v-if="products.length > 0">
+      <section class="group-list-product-area pt-50 pb-50" v-if="products.length > 0">
         <div class="container">
           <div class="row">
             <!-- group 1: Special Offers -->
@@ -493,25 +380,50 @@
       </section>
       <!-- group list product area end -->
 
-      <!-- feature product area start -->
-      <section class="feature-product-area pt-50 pb-50" v-if="featuredProducts.length > 0">
+      <!-- features categories area start 2 (Laptops) -->
+      <section class="features-categories-area pt-50 pb-50" v-if="catLaptops">
         <div class="container">
-          <div class="feature-product-wrapper bg-white">
-            <div class="row align-items-center">
-              <div class="col-lg-4 col-md-5 col-sm-12">
-                <div class="img-container">
-                  <NuxtLink to="/shop">
-                    <img src="/assets/img/banner/img2_home.jpg" alt="Featured Banner" class="w-100 rounded">
-                  </NuxtLink>
+          <div class="section-wrapper bg-white">
+            <div class="row">
+              <div class="col-12">
+                <div class="section-header">
+                  <!-- section title start -->
+                  <div class="section-title">
+                    <h4>{{ locale === 'uk' ? catLaptops.name_uk : (catLaptops.name_en || catLaptops.name_uk) }}</h4>
+                  </div>
+                  <!-- section title start -->
+
+                  <!-- product tab menu start -->
+                  <div class="feature-menu">
+                    <ul class="nav justify-content-start justify-content-lg-end">
+                      <li>
+                        <a 
+                          href="#" 
+                          :class="{ active: activeCatTab2 === 'all' }" 
+                          @click.prevent="activeCatTab2 = 'all'"
+                        >{{ locale === 'uk' ? 'Усі товари' : 'All Products' }}</a>
+                      </li>
+                      <li v-for="sub in subCatsLaptops" :key="sub.id">
+                        <a 
+                          href="#" 
+                          :class="{ active: activeCatTab2 === sub.id }" 
+                          @click.prevent="activeCatTab2 = sub.id"
+                        >{{ locale === 'uk' ? sub.name_uk : (sub.name_en || sub.name_uk) }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- product tab menu start -->
                 </div>
               </div>
-              <div class="col-lg-8 col-md-7 col-sm-12 mt-4 mt-lg-0">
-                <div class="feature-product-slider-wrapper">
-                  <div class="row">
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="products-area-wrapper mt-30">
+                  <div class="row" v-if="productsCat2.length > 0">
                     <div 
-                      v-for="product in featuredProducts" 
+                      v-for="product in productsCat2" 
                       :key="product.id" 
-                      class="col-md-6 col-sm-6 mb-4"
+                      class="col-xl-3 col-lg-4 col-sm-6 mb-4"
                     >
                       <!-- Product Card -->
                       <div class="product-item">
@@ -547,29 +459,17 @@
                       </div>
                     </div>
                   </div>
+                  <div v-else class="text-center py-5 text-muted">
+                    {{ locale === 'uk' ? 'Товарів не знайдено' : 'No products found' }}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <!-- feature product area end -->
+      <!-- features categories area end 2 -->
 
-      <!-- brand logo area start -->
-      <section class="brand-logo-area pt-50 pb-50">
-        <div class="container">
-          <div class="brand-logo-inner bg-white p-4">
-            <div class="row align-items-center justify-content-around text-center">
-              <div v-for="n in 5" :key="n" class="col-6 col-md-2 my-3">
-                <NuxtLink to="/shop">
-                  <img :src="`/assets/img/brand/brand-${n}.png`" alt="Brand Logo" class="img-fluid" style="max-height: 50px; opacity: 0.6; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
-                </NuxtLink>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- brand logo area end -->
     </main>
   </div>
 </template>
@@ -626,6 +526,9 @@ const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 
 const { data: rawProducts } = await useFetch<any>(`${apiBase}/products`);
+const { data: rawDealsProducts } = await useFetch<any>(`${apiBase}/products`, {
+  query: { is_deal: 'true' }
+});
 const { data: rawCategories } = await useFetch<any>(`${apiBase}/categories`);
 
 const products = computed<any[]>(() => {
@@ -635,21 +538,18 @@ const products = computed<any[]>(() => {
   return [];
 });
 
+const dealsProducts = computed<any[]>(() => {
+  if (!rawDealsProducts.value) return [];
+  if (Array.isArray(rawDealsProducts.value)) return rawDealsProducts.value;
+  if (rawDealsProducts.value.rows && Array.isArray(rawDealsProducts.value.rows)) return rawDealsProducts.value.rows;
+  return [];
+});
+
 const categories = computed<any[]>(() => {
   if (!rawCategories.value) return [];
   if (Array.isArray(rawCategories.value)) return rawCategories.value;
   if (rawCategories.value.rows && Array.isArray(rawCategories.value.rows)) return rawCategories.value.rows;
   return [];
-});
-
-// Helper discount price calculator
-const getOldPrice = (price: number) => {
-  return Math.round(price * 1.25);
-};
-
-// Deals of the week (first 4 products)
-const dealsProducts = computed(() => {
-  return products.value.slice(0, 4);
 });
 
 // Find Computer Category (ID 1 in seed)
@@ -687,7 +587,7 @@ const productsCat1 = computed(() => {
   } else {
     list = list.filter(p => p.category_id === Number(activeCatTab1.value));
   }
-  return list.slice(0, 6);
+  return list.slice(0, 8);
 });
 
 const productsCat2 = computed(() => {
@@ -699,7 +599,7 @@ const productsCat2 = computed(() => {
   } else {
     list = list.filter(p => p.category_id === Number(activeCatTab2.value));
   }
-  return list.slice(0, 6);
+  return list.slice(0, 8);
 });
 
 // Group lists (Special, New, Most Viewed)
@@ -715,14 +615,23 @@ const groupPopular = computed(() => {
   return products.value.slice(6, 9);
 });
 
-// Featured products area (horizontal banner on left, products list on right)
-const featuredProducts = computed(() => {
-  return products.value.slice(8, 12);
-});
 
 // Cart & Wishlist actions
 const { addToCart } = useCart();
 const { isInWishlist, toggleWishlist } = useWishlist();
+
+// Slider for Deals of the week
+const dealsSliderRef = ref<HTMLElement | null>(null);
+const scrollDeals = (direction: 'left' | 'right') => {
+  const slider = dealsSliderRef.value;
+  if (!slider) return;
+  const itemWidth = slider.querySelector('.deals-item-col')?.getBoundingClientRect().width || 300;
+  const scrollAmount = direction === 'left' ? -itemWidth : itemWidth;
+  slider.scrollBy({
+    left: scrollAmount,
+    behavior: 'smooth'
+  });
+};
 </script>
 
 <style scoped>
@@ -770,5 +679,126 @@ const { isInWishlist, toggleWishlist } = useWishlist();
   text-align: center;
   padding-top: 45px;
   padding-bottom: 45px;
+}
+
+/* Deals carousel styles */
+.deals-carousel-container {
+  position: relative;
+  width: 100%;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+.deals-slider-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+.deals-slider-track::-webkit-scrollbar {
+  display: none; /* Hide scrollbar Chrome/Safari */
+}
+.deals-item-col {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  padding: 0 10px;
+}
+@media (min-width: 576px) {
+  .deals-item-col {
+    flex: 0 0 50%;
+  }
+}
+@media (min-width: 992px) {
+  .deals-item-col {
+    flex: 0 0 33.333%;
+  }
+}
+.deals-item {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.deals-thumb {
+  max-width: 50%;
+  flex-basis: 50%;
+  position: relative;
+  padding-top: 35px;
+}
+.deals-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 50%;
+  flex-basis: 50%;
+  padding-left: 20px;
+  padding-top: 25px;
+}
+@media (max-width: 575.98px) {
+  .deals-item {
+    flex-direction: column;
+  }
+  .deals-thumb,
+  .deals-content {
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+  .deals-content {
+    padding-left: 0;
+    padding-top: 15px;
+  }
+}
+.product-name {
+  flex-grow: 1;
+  min-height: 48px; /* ensures title area has enough space */
+}
+
+/* Nav buttons */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #eee;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  font-size: 20px;
+  color: #333;
+}
+.carousel-nav-btn:hover {
+  background: #1891ac; /* Theme blue color of the template */
+  color: #fff;
+  border-color: #1891ac;
+  box-shadow: 0 6px 16px rgba(24, 145, 172, 0.3);
+}
+.carousel-nav-btn.prev {
+  left: 3px;
+}
+.carousel-nav-btn.next {
+  right: 3px;
+}
+@media (max-width: 768px) {
+  .deals-carousel-container {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .carousel-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .carousel-nav-btn.prev {
+    left: 2px;
+  }
+  .carousel-nav-btn.next {
+    right: 2px;
+  }
 }
 </style>

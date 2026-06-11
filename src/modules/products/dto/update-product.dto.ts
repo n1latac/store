@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsObject } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsObject, IsBoolean } from 'class-validator';
 
 export class UpdateProductDto {
   @IsString({ message: 'Название должно быть строкой' })
@@ -32,4 +32,12 @@ export class UpdateProductDto {
   @IsString({ message: 'Описание должно быть строкой' })
   @IsOptional()
   description_en?: string;
+
+  @IsBoolean({ message: 'is_deal должно быть булевым значением' })
+  @IsOptional()
+  is_deal?: boolean;
+
+  @IsNumber({}, { message: 'Старая цена должна быть числом' })
+  @IsOptional()
+  old_price?: number;
 }
