@@ -106,8 +106,11 @@
                     <i class="ion-android-call"></i>
                   </div>
                   <div class="support-info">
-                    <p>{{ t('support') }}</p>
-                    <strong><a href="tel:+380441234567">+38 (044) 123-45-67</a></strong>
+                    <p style="margin-bottom: 5px;">{{ t('support') }}</p>
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                      <strong><a href="tel:+380930938313" style="font-size: 15px; line-height: 1.3;">+38 (093) 093 83 13</a></strong>
+                      <strong><a href="tel:+380680938313" style="font-size: 15px; line-height: 1.3;">+38 (068) 093 83 13</a></strong>
+                    </div>
                   </div>
                 </div>
                 <div class="header-configure-area">

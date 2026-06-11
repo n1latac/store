@@ -10,8 +10,9 @@
                 <div class="features-icon">
                   <i class="ion-ios-telephone"></i>
                 </div>
-                <div class="features-content">
-                  <h5>+38 (044) 123-45-67</h5>
+                <div class="features-content" style="line-height: 1.2;">
+                  <h5 style="margin-bottom: 2px;">+38 (093) 093 83 13</h5>
+                  <h5>+38 (068) 093 83 13</h5>
                   <p>Безкоштовна підтримка!</p>
                 </div>
               </div>
@@ -62,7 +63,7 @@
                 <div class="footer-widget-body">
                   <p>Ми — команда професіоналів, яка пропонує вам найкращу комп’ютерну та офісну техніку з швидкою доставкою.</p>
                   <h6 class="contact-info-title">Контакти:</h6>
-                  <p>Україна, м. Київ, вул. Хрещатик, 1</p>
+                  <p>Україна, 02125, місто Київ, вулиця Старосільська, будинок 1, літ. У, оф. 9</p>
                   <div class="footer-social-link">
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-google-plus"></i></a>

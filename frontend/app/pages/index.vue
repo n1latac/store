@@ -5,10 +5,12 @@
       <section class="slider-area position-relative">
         <div class="hero-slider-active-wrapper">
           <div 
+            v-for="(slide, index) in slides"
+            :key="index"
             class="hero-slider-item slick-current" 
+            :class="{ active: index === currentSlide }"
             :style="{ 
-              backgroundImage: `url(${activeSlide.bg})`, 
-              display: 'block',
+              backgroundImage: `url(${slide.bg})`, 
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }"
@@ -17,9 +19,9 @@
               <div class="row align-items-center h-100">
                 <div class="col-md-10">
                   <div class="hero-slider-content text-left">
-                    <h2>{{ activeSlide.subtitle }}</h2>
-                    <h1>{{ activeSlide.title }}</h1>
-                    <h3>{{ activeSlide.desc }}</h3>
+                    <h2>{{ slide.subtitle }}</h2>
+                    <h1>{{ slide.title }}</h1>
+                    <h3>{{ slide.desc }}</h3>
                     <NuxtLink to="/shop" class="btn-hero">{{ locale === 'uk' ? 'Купити зараз' : 'Buy Now' }}</NuxtLink>
                   </div>
                 </div>
@@ -489,13 +491,13 @@ const { locale, t } = useLocale();
 // Slider config
 const slides = computed(() => [
   {
-    bg: '/assets/img/slider/home1-slide1.jpg',
+    bg: '/assets/img/slider/home1-slide1.webp',
     subtitle: locale.value === 'uk' ? 'ПЕРСОНАЛЬНІ КОМП’ЮТЕРИ' : 'PERSONAL COMPUTERS',
     title: locale.value === 'uk' ? 'Висока потужність' : 'High Performance',
     desc: locale.value === 'uk' ? 'Міні ПК MinisForum та Geekom від 10,500 ₴' : 'MinisForum & Geekom Mini PCs from 10,500 ₴',
   },
   {
-    bg: '/assets/img/slider/home1-slide2.jpg',
+    bg: '/assets/img/slider/home1-slide2.webp',
     subtitle: locale.value === 'uk' ? 'СУЧАСНІ МОНІТОРИ' : 'MODERN MONITORS',
     title: locale.value === 'uk' ? 'Чітке зображення' : 'Crystal Clear Image',
     desc: locale.value === 'uk' ? 'IPS дисплеї Dell та Acer з частотою до 144Hz' : 'Dell & Acer IPS displays up to 144Hz',
@@ -503,7 +505,6 @@ const slides = computed(() => [
 ]);
 
 const currentSlide = ref(0);
-const activeSlide = computed(() => (slides.value[currentSlide.value] || slides.value[0]) as { bg: string; subtitle: string; title: string; desc: string });
 
 const nextSlide = () => {
   currentSlide.value = (currentSlide.value + 1) % slides.value.length;
@@ -515,7 +516,7 @@ const prevSlide = () => {
 
 let slideTimer: any;
 onMounted(() => {
-  slideTimer = setInterval(nextSlide, 5000);
+  slideTimer = setInterval(nextSlide, 6000);
 });
 onUnmounted(() => {
   clearInterval(slideTimer);
@@ -638,10 +639,38 @@ const scrollDeals = (direction: 'left' | 'right') => {
 .hero-slider-active-wrapper {
   position: relative;
   overflow: hidden;
-  height: 520px;
+  height: 780px;
+}
+@media (max-width: 992px) {
+  .hero-slider-active-wrapper {
+    height: 650px;
+  }
+}
+@media (max-width: 768px) {
+  .hero-slider-active-wrapper {
+    height: 540px;
+  }
+}
+@media (max-width: 576px) {
+  .hero-slider-active-wrapper {
+    height: 420px;
+  }
 }
 .hero-slider-item {
-  height: 100%;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s ease-in-out, visibility 1.2s ease-in-out;
+  z-index: 1;
+}
+.hero-slider-item.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 2;
 }
 .slider-nav-btn {
   position: absolute;
