@@ -14,6 +14,7 @@ export const translations = {
   uk: {
     home: 'Головна',
     shop: 'Магазин',
+    about: 'Про нас',
     cart: 'Кошик',
     checkout: 'Оформлення замовлення',
     adminPanel: 'Адмін-панель',
@@ -67,11 +68,13 @@ export const translations = {
     orderSuccessText: 'Дякуємо за покупку в магазині Aivix tech. Наші менеджери зв’яжуться з вами найближчим часом для підтвердження.',
     continueShopping: 'Продовжити покупки',
     cartEmptyDesc: 'Для оформлення замовлення додайте хоча б один товар у кошик.',
-    toCatalog: 'До каталогу товарів'
+    toCatalog: 'До каталогу товарів',
+    currency: 'Грн'
   },
   en: {
     home: 'Home',
     shop: 'Shop',
+    about: 'About Us',
     cart: 'Cart',
     checkout: 'Checkout',
     adminPanel: 'Admin Panel',
@@ -125,7 +128,8 @@ export const translations = {
     orderSuccessText: 'Thank you for your purchase at Aivix tech. Our managers will contact you shortly to confirm.',
     continueShopping: 'Continue Shopping',
     cartEmptyDesc: 'To place an order, please add at least one product to the cart.',
-    toCatalog: 'To Catalog'
+    toCatalog: 'To Catalog',
+    currency: 'Uah'
   }
 };
 

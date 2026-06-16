@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IsString, IsNotEmpty, IsOptional, IsArray, IsNumber, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsArray, IsNumber, ValidateNested, Matches, IsEmail } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderItemDto {
@@ -31,10 +31,11 @@ export class PlaceOrderDto {
   lastName?: string;
 
   @IsString()
+  @Matches(/^\+?\d{9,15}$/, { message: 'Некоректний формат телефону. Телефон повинен бути у міжнародному форматі (наприклад, +380XXXXXXXXX)' })
   @IsNotEmpty({ message: 'Телефон є обов’язковим полем' })
   phone: string;
 
-  @IsString()
+  @IsEmail({}, { message: 'Некоректний формат email' })
   @IsOptional()
   email?: string;
 
@@ -77,7 +78,7 @@ export class OrdersService {
     let itemsBlock = '';
     dto.items.forEach((item, index) => {
       itemsBlock += `${index + 1}. *${item.name}* (ID: ${item.id})\n`;
-      itemsBlock += `   Кількість: ${item.quantity} × ${item.price} ₴ = *${item.quantity * item.price} ₴*\n`;
+      itemsBlock += `   Кількість: ${item.quantity} × ${item.price} Грн = *${item.quantity * item.price} Грн*\n`;
     });
 
     const buyerName = (dto.firstName || dto.lastName) 
@@ -106,7 +107,7 @@ ${dto.notes || '—'}
 
 🛒 *Товари:*
 ${itemsBlock}
-💰 *Загальна сума:* *${dto.total} ₴*`;
+💰 *Загальна сума:* *${dto.total} Грн*`;
 
     if (!botToken || !chatId) {
       this.logger.warn(

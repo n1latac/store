@@ -271,8 +271,8 @@
                         <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
                       </h5>
                       <div class="price-box">
-                        <span class="price-regular">{{ product.price }} ₴</span>
-                        <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} ₴</del></span>
+                        <span class="price-regular">{{ product.price }} {{ t('currency') }}</span>
+                        <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} {{ t('currency') }}</del></span>
                       </div>
                       <p v-if="viewMode === 'list'" class="mt-2 text-muted">
                         {{ locale === 'uk' ? 'Натисніть кнопку нижче або перейдіть у детальний перегляд товару для вивчення характеристик.' : 'Click the button below or go to the details page to view detailed technical specifications.' }}
@@ -356,10 +356,10 @@ const selectedRams = ref<string[]>([]);
 // Price Ranges Config
 const priceRanges = computed(() => [
   { label: locale.value === 'uk' ? 'Усі ціни' : 'All prices', min: null, max: null },
-  { label: locale.value === 'uk' ? 'до 5 000 ₴' : 'up to 5,000 ₴', min: 0, max: 5000 },
-  { label: locale.value === 'uk' ? '5 000 ₴ - 15 000 ₴' : '5,000 ₴ - 15,000 ₴', min: 5000, max: 15000 },
-  { label: locale.value === 'uk' ? '15 000 ₴ - 30 000 ₴' : '15,000 ₴ - 30,000 ₴', min: 15000, max: 30000 },
-  { label: locale.value === 'uk' ? 'від 30 000 ₴' : 'over 30,000 ₴', min: 30000, max: null }
+  { label: locale.value === 'uk' ? 'до 5 000 Грн' : 'up to 5,000 Uah', min: 0, max: 5000 },
+  { label: locale.value === 'uk' ? '5 000 Грн - 15 000 Грн' : '5,000 Uah - 15,000 Uah', min: 5000, max: 15000 },
+  { label: locale.value === 'uk' ? '15 000 Грн - 30 000 Грн' : '15,000 Uah - 30,000 Uah', min: 15000, max: 30000 },
+  { label: locale.value === 'uk' ? 'від 30 000 Грн' : 'over 30,000 Uah', min: 30000, max: null }
 ]);
 const selectedPriceRangeIdx = ref<number | null>(0);
 

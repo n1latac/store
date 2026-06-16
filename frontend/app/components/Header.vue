@@ -91,7 +91,7 @@
                   <img :src="getProductImage(item)" class="suggestion-img" />
                   <div class="suggestion-info">
                     <span class="suggestion-name">{{ locale === 'uk' ? item.name_uk : (item.name_en || item.name_uk) }}</span>
-                    <span class="suggestion-price">{{ item.price }} ₴</span>
+                    <span class="suggestion-price">{{ item.price }} {{ t('currency') }}</span>
                   </div>
                 </div>
               </div>
@@ -137,7 +137,7 @@
                             <div class="cart-info">
                               <h4><NuxtLink :to="`/product/${item.id}`">{{ locale === 'uk' ? (item.name_uk || item.name) : (item.name_en || item.name_uk || item.name) }}</NuxtLink></h4>
                               <span class="cart-qty">К-ть: {{ item.quantity }}</span>
-                              <span>{{ item.price }} ₴</span>
+                              <span>{{ item.price }} {{ t('currency') }}</span>
                             </div>
                             <div class="del-icon" @click="removeFromCart(item.id)">
                               <i class="fa fa-times"></i>
@@ -151,7 +151,7 @@
                           <ul class="minicart-pricing-box">
                             <li class="total">
                               <span>{{ t('total') }}</span>
-                              <span><strong>{{ cartTotal }} ₴</strong></span>
+                              <span><strong>{{ cartTotal }} {{ t('currency') }}</strong></span>
                             </li>
                           </ul>
                           <div class="minicart-button">
@@ -208,6 +208,7 @@
                   <ul class="d-flex flex-row">
                     <li :class="{ active: route.path === '/' }"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
                     <li :class="{ active: route.path === '/shop' }"><NuxtLink to="/shop">{{ t('shop') }}</NuxtLink></li>
+                    <li :class="{ active: route.path === '/about' }"><NuxtLink to="/about">{{ t('about') }}</NuxtLink></li>
                     <li :class="{ active: route.path === '/cart' }"><NuxtLink to="/cart">{{ t('cart') }}</NuxtLink></li>
                     <li :class="{ active: route.path === '/checkout' }"><NuxtLink to="/checkout">{{ t('checkout') }}</NuxtLink></li>
                   </ul>
@@ -278,6 +279,7 @@
               <ul class="mobile-menu">
                 <li><NuxtLink to="/" @click="isMobileMenuOpen = false">{{ t('home') }}</NuxtLink></li>
                 <li><NuxtLink to="/shop" @click="isMobileMenuOpen = false">{{ t('shop') }}</NuxtLink></li>
+                <li><NuxtLink to="/about" @click="isMobileMenuOpen = false">{{ t('about') }}</NuxtLink></li>
                 <li><NuxtLink to="/cart" @click="isMobileMenuOpen = false">{{ t('cart') }}</NuxtLink></li>
                 <li><NuxtLink to="/checkout" @click="isMobileMenuOpen = false">{{ t('checkout') }}</NuxtLink></li>
                 <li><NuxtLink to="/admin/categories" @click="isMobileMenuOpen = false">{{ t('adminPanel') }}</NuxtLink></li>

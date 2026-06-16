@@ -86,7 +86,7 @@
                   <li><NuxtLink to="/shop">Каталог товарів</NuxtLink></li>
                   <li><NuxtLink to="/shop">Новинки</NuxtLink></li>
                   <li><a href="#">Акції</a></li>
-                  <li><a href="#">Про нас</a></li>
+                  <li><NuxtLink to="/about">{{ t('about') }}</NuxtLink></li>
                   <li><a href="#">Контакти</a></li>
                 </ul>
               </div>
@@ -183,6 +183,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useLocale } from '~/composables/useLocale';
+
+const { locale, t } = useLocale();
 
 const email = ref('');
 const showScrollBtn = ref(false);

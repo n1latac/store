@@ -50,7 +50,7 @@
                         <td class="pro-title">
                           <NuxtLink :to="`/product/${item.id}`">{{ locale === 'uk' ? (item.name_uk || item.name) : (item.name_en || item.name_uk || item.name) }}</NuxtLink>
                         </td>
-                        <td class="pro-price"><span>{{ item.price }} ₴</span></td>
+                        <td class="pro-price"><span>{{ item.price }} {{ t('currency') }}</span></td>
                         <td class="pro-quantity">
                           <div class="pro-qty border rounded d-inline-flex align-items-center" style="padding: 0 10px; height: 35px;">
                             <span class="dec qtybtn cursor-pointer px-2" @click="updateQuantity(item.id, item.quantity - 1)">-</span>
@@ -64,7 +64,7 @@
                             <span class="inc qtybtn cursor-pointer px-2" @click="updateQuantity(item.id, item.quantity + 1)">+</span>
                           </div>
                         </td>
-                        <td class="pro-subtotal"><span>{{ item.price * item.quantity }} ₴</span></td>
+                        <td class="pro-subtotal"><span>{{ item.price * item.quantity }} {{ t('currency') }}</span></td>
                         <td class="pro-remove">
                           <a href="#" @click.prevent="removeFromCart(item.id)"><i class="fa fa-trash-o"></i></a>
                         </td>
@@ -97,7 +97,7 @@
                           <table class="table">
                             <tr>
                               <td>{{ locale === 'uk' ? 'Товари' : 'Subtotal' }}</td>
-                              <td>{{ cartTotal }} ₴</td>
+                              <td>{{ cartTotal }} {{ t('currency') }}</td>
                             </tr>
                             <tr>
                               <td>{{ locale === 'uk' ? 'Доставка' : 'Shipping' }}</td>
@@ -105,7 +105,7 @@
                             </tr>
                             <tr class="total border-top">
                               <td class="font-weight-bold">{{ locale === 'uk' ? 'Разом' : 'Total' }}</td>
-                              <td class="text-success font-weight-bold">{{ cartTotal }} ₴</td>
+                              <td class="text-success font-weight-bold">{{ cartTotal }} {{ t('currency') }}</td>
                             </tr>
                           </table>
                         </div>

@@ -82,13 +82,13 @@
         <template #attributes-cell="{ row }">
           <div class="flex flex-wrap gap-1 max-w-[200px] whitespace-normal break-all">
             <span
-              v-for="(val, key) in row.original.attributes"
-              :key="key"
+              v-for="attr in getOrderedAttributes(row.original.attributes)"
+              :key="attr.key"
               class="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-md border border-gray-200 dark:border-gray-700 break-all whitespace-normal"
             >
-              {{ key }}: {{ val }}
+              {{ attr.key }}: {{ attr.value }}
             </span>
-            <span v-if="!Object.keys(row.original.attributes || {}).length" class="text-gray-400 text-xs">
+            <span v-if="!getOrderedAttributes(row.original.attributes).length" class="text-gray-400 text-xs">
               —
             </span>
           </div>
@@ -472,6 +472,26 @@ const getProductImage = (product: any) => {
     return product.images[0].image_url;
   }
   return null;
+};
+
+const getOrderedAttributes = (attributes: Record<string, any>) => {
+  if (!attributes) return [];
+  const order: string[] = attributes._spec_order || Object.keys(attributes);
+  const result: Array<{ key: string; value: any }> = [];
+
+  order.forEach((key) => {
+    if (key !== '_spec_order' && attributes[key] !== undefined) {
+      result.push({ key, value: attributes[key] });
+    }
+  });
+
+  Object.keys(attributes).forEach((key) => {
+    if (key !== '_spec_order' && !order.includes(key) && attributes[key] !== undefined) {
+      result.push({ key, value: attributes[key] });
+    }
+  });
+
+  return result;
 };
 
 // Actions on characteristics

@@ -67,8 +67,8 @@
                     <h3 class="product-name-title mb-3">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</h3>
                     
                     <div class="price-box mb-3">
-                      <span class="price-regular">{{ product.price }} ₴</span>
-                      <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} ₴</del></span>
+                      <span class="price-regular">{{ product.price }} {{ t('currency') }}</span>
+                      <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} {{ t('currency') }}</del></span>
                     </div>
 
                     <div class="product-description-brief mb-4 text-muted">
@@ -93,18 +93,6 @@
                         @click="handleAddToCart"
                         style="height: 45px; padding: 0 25px;"
                       >{{ t('addToCart') }}</button>
-                    </div>
-
-                    <!-- External Resource Link Button -->
-                    <div v-if="product.attributes?.external_link" class="external-buy-action mb-4">
-                      <a 
-                        :href="product.attributes.external_link" 
-                        target="_blank" 
-                        class="btn btn-outline-info w-100 font-weight-bold d-flex align-items-center justify-content-center"
-                        style="height: 45px; font-size: 16px; border-color: #17a2b8;"
-                      >
-                        <i class="ion-android-open mr-2"></i> {{ locale === 'uk' ? 'Купити на першоджерелі' : 'Buy on original source' }}
-                      </a>
                     </div>
 
                     <!-- Wishlist add -->
@@ -154,20 +142,10 @@
                       <div v-if="activeTab === 'specs'" class="tab-pane fade show active">
                         <table class="table table-striped table-bordered spec-table">
                           <tbody>
-                            <tr v-if="product.attributes?.brand">
-                              <td class="font-weight-bold" style="width: 30%;">{{ locale === 'uk' ? 'Бренд' : 'Brand' }}</td>
-                              <td>{{ product.attributes.brand }}</td>
-                            </tr>
-                            <tr v-if="product.attributes?.ram">
-                              <td class="font-weight-bold">{{ locale === 'uk' ? 'Оперативна пам’ять' : 'RAM' }}</td>
-                              <td>{{ product.attributes.ram }}</td>
-                            </tr>
-                            <tr v-if="product.attributes?.storage">
-                              <td class="font-weight-bold">{{ locale === 'uk' ? 'Накопичувач' : 'Storage' }}</td>
-                              <td>{{ product.attributes.storage }}</td>
-                            </tr>
                             <tr v-for="spec in customSpecs" :key="spec.key">
-                              <td class="font-weight-bold text-capitalize">{{ spec.key }}</td>
+                              <td class="font-weight-bold" style="width: 30%;">
+                                {{ getLocalizedSpecKey(spec.key) }}
+                              </td>
                               <td>{{ spec.value }}</td>
                             </tr>
                             <tr v-if="!hasSpecs">
@@ -215,7 +193,7 @@
                   <h6 class="related-title text-truncate">
                     <NuxtLink :to="`/product/${rp.id}`" class="text-dark font-weight-bold">{{ locale === 'uk' ? rp.name_uk : (rp.name_en || rp.name_uk) }}</NuxtLink>
                   </h6>
-                  <span class="text-success font-weight-bold">{{ rp.price }} ₴</span>
+                  <span class="text-success font-weight-bold">{{ rp.price }} {{ t('currency') }}</span>
                 </div>
               </div>
               <div v-else class="text-muted text-center py-4">
@@ -395,9 +373,6 @@ const customSpecs = computed(() => {
   order.forEach((key) => {
     if (
       key !== 'external_link' &&
-      key !== 'brand' &&
-      key !== 'ram' &&
-      key !== 'storage' &&
       key !== '_spec_order' &&
       attrs[key] !== undefined
     ) {
@@ -409,9 +384,6 @@ const customSpecs = computed(() => {
   Object.keys(attrs).forEach((key) => {
     if (
       key !== 'external_link' &&
-      key !== 'brand' &&
-      key !== 'ram' &&
-      key !== 'storage' &&
       key !== '_spec_order' &&
       !order.includes(key) &&
       attrs[key] !== undefined
@@ -422,6 +394,20 @@ const customSpecs = computed(() => {
 
   return result;
 });
+
+const getLocalizedSpecKey = (key: string) => {
+  const lowKey = key.toLowerCase().trim();
+  if (lowKey === 'brand') {
+    return locale.value === 'uk' ? 'Бренд' : 'Brand';
+  }
+  if (lowKey === 'ram') {
+    return locale.value === 'uk' ? 'Оперативна пам’ять' : 'RAM';
+  }
+  if (lowKey === 'storage') {
+    return locale.value === 'uk' ? 'Накопичувач' : 'Storage';
+  }
+  return key;
+};
 
 const hasSpecs = computed(() => {
   const attrs = product.value?.attributes;

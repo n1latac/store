@@ -139,8 +139,8 @@
                           </h4>
                           <div class="mt-auto">
                             <div class="price-box">
-                              <span class="price-regular">{{ product.price }} ₴</span>
-                              <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} ₴</del></span>
+                              <span class="price-regular">{{ product.price }} {{ t('currency') }}</span>
+                              <span class="price-old" v-if="product.old_price"><del>{{ product.old_price }} {{ t('currency') }}</del></span>
                             </div>
                             <a class="btn btn-cart mt-2" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
                             <div class="product-countdown mt-2 font-weight-bold text-info" style="font-size: 13px;">
@@ -246,7 +246,7 @@
                             <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
                           </h5>
                           <div class="price-box">
-                            <span class="price-regular">{{ product.price }} ₴</span>
+                            <span class="price-regular">{{ product.price }} {{ t('currency') }}</span>
                           </div>
                           <div class="product-item-action">
                             <a class="btn btn-cart" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
@@ -290,7 +290,7 @@
                         </NuxtLink>
                       </h5>
                       <div class="price-box my-1">
-                        <span class="price-regular font-weight-bold text-info">{{ product.price }} ₴</span>
+                        <span class="price-regular font-weight-bold text-info">{{ product.price }} {{ t('currency') }}</span>
                       </div>
                       <div class="add-to-links group-action-link" style="font-size: 14px;">
                         <a href="#" class="mr-2" @click.prevent="toggleWishlist(product)" :title="locale === 'uk' ? 'В обране' : 'Wishlist'">
@@ -326,7 +326,7 @@
                         </NuxtLink>
                       </h5>
                       <div class="price-box my-1">
-                        <span class="price-regular font-weight-bold text-info">{{ product.price }} ₴</span>
+                        <span class="price-regular font-weight-bold text-info">{{ product.price }} {{ t('currency') }}</span>
                       </div>
                       <div class="add-to-links group-action-link" style="font-size: 14px;">
                         <a href="#" class="mr-2" @click.prevent="toggleWishlist(product)" :title="locale === 'uk' ? 'В обране' : 'Wishlist'">
@@ -362,7 +362,7 @@
                         </NuxtLink>
                       </h5>
                       <div class="price-box my-1">
-                        <span class="price-regular font-weight-bold text-info">{{ product.price }} ₴</span>
+                        <span class="price-regular font-weight-bold text-info">{{ product.price }} {{ t('currency') }}</span>
                       </div>
                       <div class="add-to-links group-action-link" style="font-size: 14px;">
                         <a href="#" class="mr-2" @click.prevent="toggleWishlist(product)" :title="locale === 'uk' ? 'В обране' : 'Wishlist'">
@@ -452,7 +452,7 @@
                             <NuxtLink :to="`/product/${product.id}`">{{ locale === 'uk' ? product.name_uk : (product.name_en || product.name_uk) }}</NuxtLink>
                           </h5>
                           <div class="price-box">
-                            <span class="price-regular">{{ product.price }} ₴</span>
+                            <span class="price-regular">{{ product.price }} {{ t('currency') }}</span>
                           </div>
                           <div class="product-item-action">
                             <a class="btn btn-cart" href="#" @click.prevent="addToCart(product)"><i class="ion-bag"></i> {{ t('addToCart') }}</a>
@@ -494,7 +494,7 @@ const slides = computed(() => [
     bg: '/assets/img/slider/home1-slide1.webp',
     subtitle: locale.value === 'uk' ? 'ПЕРСОНАЛЬНІ КОМП’ЮТЕРИ' : 'PERSONAL COMPUTERS',
     title: locale.value === 'uk' ? 'Висока потужність' : 'High Performance',
-    desc: locale.value === 'uk' ? 'Міні ПК MinisForum та Geekom від 10,500 ₴' : 'MinisForum & Geekom Mini PCs from 10,500 ₴',
+    desc: locale.value === 'uk' ? 'Міні ПК MinisForum та Geekom від 10,500 Грн' : 'MinisForum & Geekom Mini PCs from 10,500 Uah',
   },
   {
     bg: '/assets/img/slider/home1-slide2.webp',

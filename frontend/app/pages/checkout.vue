@@ -43,12 +43,14 @@
 
                 <div class="mb-3">
                   <label class="font-weight-bold">{{ t('phone') }} <span class="text-danger">*</span></label>
-                  <input type="tel" v-model="form.phone" class="form-control" required placeholder="+380...">
+                  <input type="tel" v-model="form.phone" class="form-control" :class="{ 'is-invalid': errors.phone }" required placeholder="+380..." @blur="validatePhoneField" @input="onPhoneInput">
+                  <div v-if="errors.phone" class="text-danger mt-1" style="font-size: 13px;">{{ errors.phone }}</div>
                 </div>
 
                 <div class="mb-3">
                   <label class="font-weight-bold">{{ t('email') }}</label>
-                  <input type="email" v-model="form.email" class="form-control" placeholder="example@mail.com">
+                  <input type="email" v-model="form.email" class="form-control" :class="{ 'is-invalid': errors.email }" placeholder="example@mail.com" @blur="validateEmailField" @input="onEmailInput">
+                  <div v-if="errors.email" class="text-danger mt-1" style="font-size: 13px;">{{ errors.email }}</div>
                 </div>
 
                 <div class="row">
@@ -92,13 +94,13 @@
                           <NuxtLink :to="`/product/${item.id}`" class="text-dark font-weight-bold">{{ locale === 'uk' ? (item.name_uk || item.name) : (item.name_en || item.name_uk || item.name) }}</NuxtLink>
                           <strong> × {{ item.quantity }}</strong>
                         </td>
-                        <td>{{ item.price * item.quantity }} ₴</td>
+                        <td>{{ item.price * item.quantity }} {{ t('currency') }}</td>
                       </tr>
                     </tbody>
                     <tfoot>
                       <tr>
                         <td class="font-weight-bold">{{ locale === 'uk' ? 'Товари' : 'Subtotal' }}</td>
-                        <td>{{ cartTotal }} ₴</td>
+                        <td>{{ cartTotal }} {{ t('currency') }}</td>
                       </tr>
                       <tr>
                         <td class="font-weight-bold">{{ t('shipping') }}</td>
@@ -106,7 +108,7 @@
                       </tr>
                       <tr class="h5">
                         <td class="font-weight-bold">{{ locale === 'uk' ? 'Разом до сплати' : 'Total Payment' }}</td>
-                        <td class="text-success font-weight-bold">{{ cartTotal }} ₴</td>
+                        <td class="text-success font-weight-bold">{{ cartTotal }} {{ t('currency') }}</td>
                       </tr>
                     </tfoot>
                   </table>
@@ -189,6 +191,55 @@ const form = reactive({
   notes: ''
 });
 
+const errors = reactive({
+  phone: '',
+  email: ''
+});
+
+const validatePhoneField = () => {
+  errors.phone = '';
+  const cleanPhone = form.phone.replace(/[\s()\-]/g, '');
+  const isPhoneValid = /^\+?\d{9,15}$/.test(cleanPhone);
+  if (!isPhoneValid && form.phone) {
+    errors.phone = locale.value === 'uk'
+      ? 'Некоректний формат телефону. Телефон повинен бути у міжнародному форматі (наприклад, +380XXXXXXXXX)'
+      : 'Invalid phone format. Phone must be in international format (e.g. +380XXXXXXXXX)';
+  } else if (!form.phone) {
+    errors.phone = locale.value === 'uk'
+      ? 'Телефон є обов’язковим полем'
+      : 'Phone is a required field';
+  }
+};
+
+const validateEmailField = () => {
+  errors.email = '';
+  if (form.email) {
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+    if (!isEmailValid) {
+      errors.email = locale.value === 'uk'
+        ? 'Некоректний формат email'
+        : 'Invalid email format';
+    }
+  }
+};
+
+const onPhoneInput = () => {
+  if (errors.phone) {
+    const cleanPhone = form.phone.replace(/[\s()\-]/g, '');
+    if (/^\+?\d{9,15}$/.test(cleanPhone)) {
+      errors.phone = '';
+    }
+  }
+};
+
+const onEmailInput = () => {
+  if (errors.email) {
+    if (!form.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      errors.email = '';
+    }
+  }
+};
+
 const triggerSubmit = () => {
   if (orderSubmitting.value) return;
   const btn = document.getElementById('submit-order-btn');
@@ -196,6 +247,30 @@ const triggerSubmit = () => {
 };
 
 const handlePlaceOrder = async () => {
+  validatePhoneField();
+  validateEmailField();
+
+  const cleanPhone = form.phone.replace(/[\s()\-]/g, '');
+  const isPhoneValid = /^\+?\d{9,15}$/.test(cleanPhone);
+  if (!isPhoneValid) {
+    errors.phone = locale.value === 'uk'
+      ? 'Некоректний формат телефону. Телефон повинен бути у міжнародному форматі (наприклад, +380XXXXXXXXX)'
+      : 'Invalid phone format. Phone must be in international format (e.g. +380XXXXXXXXX)';
+  }
+
+  if (form.email) {
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+    if (!isEmailValid) {
+      errors.email = locale.value === 'uk'
+        ? 'Некоректний формат email'
+        : 'Invalid email format';
+    }
+  }
+
+  if (errors.phone || errors.email) {
+    return;
+  }
+
   console.log('Placing order with data:', form);
   orderSubmitting.value = true;
 
@@ -203,8 +278,8 @@ const handlePlaceOrder = async () => {
     const payload = {
       firstName: form.firstName,
       lastName: form.lastName,
-      phone: form.phone,
-      email: form.email,
+      phone: cleanPhone,
+      email: form.email || undefined,
       city: form.city,
       warehouse: form.warehouse,
       notes: form.notes,
