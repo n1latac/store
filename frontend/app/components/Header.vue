@@ -36,8 +36,18 @@
             </div>
             <div class="col-lg-6">
               <div class="header-links">
-                <ul class="nav justify-content-end d-flex flex-row">
-                  <li><NuxtLink to="/admin/categories">{{ t('adminPanel') }}</NuxtLink></li>
+                <ul class="nav justify-content-end d-flex flex-row align-items-center" style="gap: 15px;">
+                  <li style="color: #ffffff; font-size: 13px; opacity: 0.9;">{{ t('contactUs') }}</li>
+                  <li>
+                    <a href="https://t.me/+380930938313" target="_blank" style="color: #ffffff; display: inline-flex; align-items: center; gap: 5px; font-weight: 500; transition: color 0.2s;">
+                      <i class="fa fa-paper-plane" style="color: #00E5FF;"></i> Telegram
+                    </a>
+                  </li>
+                  <li>
+                    <a href="viber://chat?number=%2B380930938313" style="color: #ffffff; display: inline-flex; align-items: center; gap: 5px; font-weight: 500; transition: color 0.2s;">
+                      <i class="fa fa-comments" style="color: #c586ff;"></i> Viber
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -282,7 +292,16 @@
                 <li><NuxtLink to="/about" @click="isMobileMenuOpen = false">{{ t('about') }}</NuxtLink></li>
                 <li><NuxtLink to="/cart" @click="isMobileMenuOpen = false">{{ t('cart') }}</NuxtLink></li>
                 <li><NuxtLink to="/checkout" @click="isMobileMenuOpen = false">{{ t('checkout') }}</NuxtLink></li>
-                <li><NuxtLink to="/admin/categories" @click="isMobileMenuOpen = false">{{ t('adminPanel') }}</NuxtLink></li>
+                <li style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px; padding-top: 10px;">
+                  <a href="https://t.me/+380930938313" target="_blank" style="display: flex !important; align-items: center; gap: 8px;">
+                    <i class="fa fa-paper-plane" style="color: #00E5FF;"></i> Telegram Support
+                  </a>
+                </li>
+                <li>
+                  <a href="viber://chat?number=%2B380930938313" style="display: flex !important; align-items: center; gap: 8px;">
+                    <i class="fa fa-comments" style="color: #c586ff;"></i> Viber Support
+                  </a>
+                </li>
               </ul>
             </nav>
             <!-- mobile menu navigation end -->

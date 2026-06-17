@@ -8,7 +8,10 @@
             v-for="(slide, index) in slides"
             :key="index"
             class="hero-slider-item slick-current" 
-            :class="{ active: index === currentSlide }"
+            :class="[
+              { active: index === currentSlide },
+              slide.class || ''
+            ]"
             :style="{ 
               backgroundImage: `url(${slide.bg})`, 
               backgroundSize: 'cover',
@@ -16,16 +19,20 @@
             }"
           >
             <div class="container h-100">
-              <div class="row align-items-center h-100">
-                <div class="col-md-10">
+              <div class="row h-100" :class="slide.alignClass || 'align-items-center'">
+                <div :class="slide.colClass || 'col-md-10'">
                   <div class="hero-slider-content text-left">
-                    <h2>{{ slide.subtitle }}</h2>
-                    <h1>{{ slide.title }}</h1>
-                    <h3>{{ slide.desc }}</h3>
-                    <NuxtLink to="/shop" class="btn-hero">{{ locale === 'uk' ? 'Купити зараз' : 'Buy Now' }}</NuxtLink>
+                    <h2 v-if="slide.subtitle">{{ slide.subtitle }}</h2>
+                    <h1 v-if="slide.title" v-html="slide.title"></h1>
+                    <h3 v-if="slide.desc">{{ slide.desc }}</h3>
+                    <NuxtLink :to="slide.link || '/shop'" class="btn-hero">{{ locale === 'uk' ? 'Купити зараз' : 'Buy Now' }}</NuxtLink>
                   </div>
                 </div>
               </div>
+            </div>
+            <!-- Dynamic CES Award Badge Overlay -->
+            <div v-if="slide.hasBadge" class="slide-badge-container">
+              <img src="/assets/img/slider/ces-2026-badge.png" alt="CES 2026 Innovation Awards" class="slide-badge-img">
             </div>
           </div>
           <!-- Slider Navigation -->
@@ -501,6 +508,35 @@ const slides = computed(() => [
     subtitle: locale.value === 'uk' ? 'СУЧАСНІ МОНІТОРИ' : 'MODERN MONITORS',
     title: locale.value === 'uk' ? 'Чітке зображення' : 'Crystal Clear Image',
     desc: locale.value === 'uk' ? 'IPS дисплеї Dell та Acer з частотою до 144Hz' : 'Dell & Acer IPS displays up to 144Hz',
+  },
+  {
+    bg: '/assets/img/slider/home1-slide3.png',
+    subtitle: locale.value === 'uk' ? 'Міні-робоча станція MS-02 Ultra' : 'Mini Workstation MS-02 Ultra',
+    title: locale.value === 'uk' ? 'Оновіть все,<br>нічого не<br>компромісуйте' : 'Upgrade everything,<br>compromise nothing',
+    link: '/product/134',
+    class: 'ms-02-slide',
+    hasBadge: true
+  },
+  {
+    bg: '/assets/img/slider/home1-slide4.png',
+    title: locale.value === 'uk' ? 'Високошвидкісний<br>Інтернет' : 'High-Speed<br>Internet',
+    desc: locale.value === 'uk'
+      ? 'Підключайтеся до двох мереж одночасно та використовуйте інтелектуальне балансування навантаження, щоб забезпечити стабільну роботу вашої мережі та її роботу в режимі реального часу. Незалежно від того, чи дивитеся відео у форматі HD, чи граєте у великі ігри, два мережеві порти можуть забезпечити достатню пропускну здатність, усунути буферизацію та забезпечити плавну та комфортну швидкість мережі.'
+      : 'Connect to two networks simultaneously and use intelligent load balancing to ensure stable and real-time operation of your network. Whether you are watching HD videos or playing demanding games, dual network ports can provide sufficient bandwidth, eliminate buffering, and ensure smooth and comfortable network speed.',
+    link: '/product/134',
+    class: 'rj45-slide',
+    colClass: 'col-lg-8 offset-lg-2 col-md-9 offset-md-1'
+  },
+  {
+    bg: '/assets/img/slider/home1-slide5.png',
+    title: 'OCuLink',
+    desc: locale.value === 'uk'
+      ? 'Дозвольте гравцям легко підключити потужнішу відеокарту відповідно до їхніх потреб, розкриваючи 90% продуктивності зовнішньої відеокарти. Завдяки зовнішній відеокарті гравці можуть насолоджуватися надвисокою частотою кадрів та стабільним ігровим процесом у роздільній здатності 4K або вище, а також насолоджуватися захопливою ігровою графікою та багатшою деталізацією.'
+      : 'Allow gamers to easily connect a more powerful graphics card according to their needs, unleashing 90% of the external GPU\'s performance. Thanks to the external graphics card, gamers can enjoy ultra-high frame rates and stable gameplay in 4K resolution or higher, as well as experience immersive gaming graphics and richer details.',
+    link: '/product/134',
+    class: 'oculink-slide',
+    colClass: 'col-lg-8 offset-lg-2 col-md-10 offset-md-1',
+    alignClass: 'align-items-end'
   }
 ]);
 
@@ -828,6 +864,222 @@ const scrollDeals = (direction: 'left' | 'right') => {
   }
   .carousel-nav-btn.next {
     right: 2px;
+  }
+}
+
+/* Custom MS-02 Ultra Slide & Badge Styles */
+.hero-slider-item.ms-02-slide .hero-slider-content h2 {
+  text-transform: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+.hero-slider-item.ms-02-slide .hero-slider-content h1 {
+  text-transform: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 1.15;
+  color: #ffffff;
+  max-width: 600px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.slide-badge-container {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  z-index: 5;
+  pointer-events: none;
+}
+.slide-badge-img {
+  height: 130px;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 992px) {
+  .hero-slider-item.ms-02-slide .hero-slider-content h2 {
+    font-size: 22px;
+  }
+  .hero-slider-item.ms-02-slide .hero-slider-content h1 {
+    font-size: 46px;
+    max-width: 500px;
+  }
+  .slide-badge-container {
+    bottom: 30px;
+    left: 30px;
+  }
+  .slide-badge-img {
+    height: 100px;
+  }
+}
+@media (max-width: 768px) {
+  .hero-slider-item.ms-02-slide .hero-slider-content h2 {
+    font-size: 18px;
+  }
+  .hero-slider-item.ms-02-slide .hero-slider-content h1 {
+    font-size: 36px;
+    max-width: 400px;
+  }
+  .slide-badge-container {
+    bottom: 25px;
+    left: 25px;
+  }
+  .slide-badge-img {
+    height: 80px;
+  }
+}
+@media (max-width: 576px) {
+  .hero-slider-item.ms-02-slide .hero-slider-content h2 {
+    font-size: 14px;
+  }
+  .hero-slider-item.ms-02-slide .hero-slider-content h1 {
+    font-size: 26px;
+    max-width: 280px;
+    margin-bottom: 10px;
+  }
+  .slide-badge-container {
+    bottom: 20px;
+    left: 20px;
+  }
+  .slide-badge-img {
+    height: 60px;
+  }
+}
+
+/* Custom RJ45 High-Speed Internet Slide (Light theme slide) */
+.hero-slider-item.rj45-slide .hero-slider-content {
+  margin-top: -45px; /* raise text block up by about a centimeter */
+}
+.hero-slider-item.rj45-slide .hero-slider-content h1 {
+  text-transform: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 55px;
+  line-height: 1.15;
+  color: #111111 !important; /* Dark text directly on light background */
+  max-width: 600px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+.hero-slider-item.rj45-slide .hero-slider-content h3 {
+  text-transform: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444444 !important; /* Dark grey description */
+  max-width: 700px;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 992px) {
+  .hero-slider-item.rj45-slide .hero-slider-content {
+    margin-top: -30px;
+  }
+  .hero-slider-item.rj45-slide .hero-slider-content h1 {
+    font-size: 42px;
+    max-width: 480px;
+  }
+  .hero-slider-item.rj45-slide .hero-slider-content h3 {
+    font-size: 14px;
+  }
+}
+@media (max-width: 768px) {
+  .hero-slider-item.rj45-slide .hero-slider-content {
+    margin-top: -20px;
+  }
+  .hero-slider-item.rj45-slide .hero-slider-content h1 {
+    font-size: 32px;
+    max-width: 380px;
+  }
+  .hero-slider-item.rj45-slide .hero-slider-content h3 {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+@media (max-width: 576px) {
+  .hero-slider-item.rj45-slide .hero-slider-content {
+    margin-top: -10px;
+  }
+  .hero-slider-item.rj45-slide .hero-slider-content h1 {
+    font-size: 24px;
+    max-width: 260px;
+    margin-bottom: 8px;
+  }
+  .hero-slider-item.rj45-slide .hero-slider-content h3 {
+    display: none; /* Hide long description on mobile slider */
+  }
+}
+
+/* Custom OCuLink Slide (Light theme centered slide) */
+.hero-slider-item.oculink-slide .hero-slider-content {
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 40px; /* lowered text block closer to bottom */
+}
+.hero-slider-item.oculink-slide .hero-slider-content h1 {
+  text-transform: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 55px;
+  line-height: 1.15;
+  color: #111111 !important; /* Dark text directly on light background */
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+.hero-slider-item.oculink-slide .hero-slider-content h3 {
+  text-transform: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444444 !important; /* Dark grey description */
+  max-width: 800px;
+  margin: 0 auto 25px auto;
+}
+
+@media (max-width: 992px) {
+  .hero-slider-item.oculink-slide .hero-slider-content {
+    margin-bottom: 30px;
+  }
+  .hero-slider-item.oculink-slide .hero-slider-content h1 {
+    font-size: 42px;
+  }
+  .hero-slider-item.oculink-slide .hero-slider-content h3 {
+    font-size: 14px;
+    max-width: 650px;
+  }
+}
+@media (max-width: 768px) {
+  .hero-slider-item.oculink-slide .hero-slider-content {
+    margin-bottom: 20px;
+  }
+  .hero-slider-item.oculink-slide .hero-slider-content h1 {
+    font-size: 32px;
+  }
+  .hero-slider-item.oculink-slide .hero-slider-content h3 {
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 500px;
+  }
+}
+@media (max-width: 576px) {
+  .hero-slider-item.oculink-slide .hero-slider-content {
+    margin-bottom: 10px;
+  }
+  .hero-slider-item.oculink-slide .hero-slider-content h1 {
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+  .hero-slider-item.oculink-slide .hero-slider-content h3 {
+    display: none; /* Hide description on mobile slider */
   }
 }
 </style>

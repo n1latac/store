@@ -152,7 +152,7 @@
                 <div class="col-md-3 text-center">
                   <div class="partnership-logo-wrap p-3 rounded bg-light border d-inline-flex flex-column align-items-center">
                     <span class="logo-text font-weight-bold" style="letter-spacing: 2px; font-size: 18px; color: #111;">MINISFORUM</span>
-                    <span class="badge badge-dark mt-2" style="font-size: 10px;">OFFICIAL PARTNER</span>
+                    <span class="badge badge-dark mt-2" style="font-size: 10px; color: gray">OFFICIAL PARTNER</span>
                   </div>
                 </div>
               </div>

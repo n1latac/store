@@ -13,7 +13,7 @@
                 <div class="features-content" style="line-height: 1.2;">
                   <h5 style="margin-bottom: 2px;">+38 (093) 093 83 13</h5>
                   <h5>+38 (068) 093 83 13</h5>
-                  <p>Безкоштовна підтримка!</p>
+                  <p>{{ t('footerFreeSupport') }}</p>
                 </div>
               </div>
             </div>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="features-content">
                   <h5>support@aivixtech.com</h5>
-                  <p>Підтримка замовлень!</p>
+                  <p>{{ t('footerOrderSupport') }}</p>
                 </div>
               </div>
             </div>
@@ -36,8 +36,8 @@
                   <i class="ion-clock"></i>
                 </div>
                 <div class="features-content">
-                  <h5>Пн - Пт / 9:00 - 18:00</h5>
-                  <p>Робочі дні/години!</p>
+                  <h5>{{ t('footerWorkingHours') }}</h5>
+                  <p>{{ t('footerWorkingDays') }}</p>
                 </div>
               </div>
             </div>
@@ -52,8 +52,8 @@
       <div class="container">
         <div class="footer-widget-inner">
           <div class="row">
-            <!-- footer widget item start -->
-            <div class="col-lg-3 col-md-6 col-sm-6">
+            <!-- footer widget item start (Company & Contacts) -->
+            <div class="col-lg-5 col-md-6 col-sm-12">
               <div class="footer-widget-item">
                 <div class="footer-widget-logo">
                   <NuxtLink to="/">
@@ -61,65 +61,44 @@
                   </NuxtLink>
                 </div>
                 <div class="footer-widget-body">
-                  <p>Ми — команда професіоналів, яка пропонує вам найкращу комп’ютерну та офісну техніку з швидкою доставкою.</p>
-                  <h6 class="contact-info-title">Контакти:</h6>
-                  <p>Україна, 02125, місто Київ, вулиця Старосільська, будинок 1, літ. У, оф. 9</p>
-                  <div class="footer-social-link">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-google-plus"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-youtube"></i></a>
-                    <a href="#"><i class="fa fa-rss"></i></a>
-                  </div>
+                  <p>{{ t('footerCompanyDesc') }}</p>
+                  <h6 class="contact-info-title">{{ t('footerContacts') }}</h6>
+                  <p>{{ t('footerAddress') }}</p>
+                  <div style="padding-top: 10px;"></div>
                 </div>
               </div>
             </div>
             <!-- footer widget item end -->
 
-            <!-- footer widget item start -->
-            <div class="col-lg-3 col-md-6 col-sm-6">
+            <!-- footer widget item start (Information) -->
+            <div class="col-lg-3 col-md-3 col-sm-6">
               <div class="footer-widget-item">
                 <div class="footer-widget-title">
-                  <h5>Інформація</h5>
+                  <h5>{{ t('footerInfoTitle') }}</h5>
                 </div>
                 <ul class="footer-widget-body">
-                  <li><NuxtLink to="/shop">Каталог товарів</NuxtLink></li>
-                  <li><NuxtLink to="/shop">Новинки</NuxtLink></li>
-                  <li><a href="#">Акції</a></li>
+                  <li><NuxtLink to="/shop">{{ t('footerCatalog') }}</NuxtLink></li>
+                  <li><NuxtLink to="/shop">{{ t('footerNewArrivals') }}</NuxtLink></li>
                   <li><NuxtLink to="/about">{{ t('about') }}</NuxtLink></li>
-                  <li><a href="#">Контакти</a></li>
                 </ul>
               </div>
             </div>
             <!-- footer widget item end -->
 
-            <!-- footer widget item start -->
-            <div class="col-lg-3 col-md-6 col-sm-6">
+            <!-- footer widget item start (Quick Links) -->
+            <div class="col-lg-4 col-md-3 col-sm-6">
               <div class="footer-widget-item">
                 <div class="footer-widget-title">
-                  <h5>Мій акаунт</h5>
+                  <h5>{{ t('quickLinks') }}</h5>
                 </div>
                 <ul class="footer-widget-body">
-                  <li><NuxtLink to="/admin/categories">Адмін-панель</NuxtLink></li>
-                  <li><NuxtLink to="/cart">Мій Кошик</NuxtLink></li>
-                  <li><a href="#">Історія замовлень</a></li>
-                  <li><a href="#">Мої адреси</a></li>
-                </ul>
-              </div>
-            </div>
-            <!-- footer widget item end -->
-
-            <!-- footer widget item start -->
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="footer-widget-item">
-                <div class="footer-widget-title">
-                  <h5>Підтримка</h5>
-                </div>
-                <ul class="footer-widget-body">
-                  <li><a href="#">Карта сайту</a></li>
-                  <li><a href="#">Повернення товару</a></li>
-                  <li><a href="#">Політика конфіденційності</a></li>
-                  <li><a href="#">Умови обслуговування</a></li>
+                  <li><NuxtLink to="/cart">{{ t('myCart') }}</NuxtLink></li>
+                  <li><NuxtLink to="/checkout">{{ t('checkout') }}</NuxtLink></li>
+                  <li>
+                    <a href="https://t.me/+380930938313" target="_blank">
+                      Telegram Support
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -130,43 +109,18 @@
     </div>
     <!-- footer widget area end -->
 
-    <!-- newsletter area start -->
-    <div class="newsletter-area">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-xl-4 col-lg-4 col-md-5">
-            <div class="newsletter-title">
-              <div class="newsletter-icon">
-                <i class="ion-ios-email"></i>
-              </div>
-              <h3>Підпишіться на новини</h3>
-            </div>
-          </div>
-          <div class="col-xl-5 col-lg-5 col-md-7">
-            <div class="newsletter-inner">
-              <form @submit.prevent="handleSubscribe">
-                <input type="email" v-model="email" class="news-field" required placeholder="Введіть вашу email адресу">
-                <button type="submit" class="news-btn">Підписатися</button>
-              </form>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-3 col-md-12">
-            <div class="payment-method">
-              <img src="/assets/img/payment.png" alt="Payment Methods">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- newsletter area end -->
-
     <!-- footer bottom area start -->
     <div class="footer-bottom-area">
       <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <div class="copyright-text text-center">
-              <p>&copy; 2026 <b>Aivix tech</b>. Усі права захищені. Розроблено з <i class="fa fa-heart text-danger"></i> для демонстрації.</p>
+        <div class="row align-items-center">
+          <div class="col-md-6 col-12">
+            <div class="copyright-text text-center text-md-left">
+              <p style="margin-bottom: 0;">&copy; 2026 <b>Aivix tech</b>. {{ t('footerCopyright') }} {{ t('developedWith') }} <i class="fa fa-heart text-danger"></i> {{ t('footerDeveloped') }}</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-12 mt-3 mt-md-0">
+            <div class="payment-method text-center text-md-right">
+              <img src="/assets/img/payment.png" alt="Payment Methods" style="max-height: 28px; width: auto; display: inline-block;">
             </div>
           </div>
         </div>
@@ -187,15 +141,7 @@ import { useLocale } from '~/composables/useLocale';
 
 const { locale, t } = useLocale();
 
-const email = ref('');
 const showScrollBtn = ref(false);
-
-const handleSubscribe = () => {
-  if (email.value) {
-    alert(`Дякуємо за підписку, ${email.value}!`);
-    email.value = '';
-  }
-};
 
 const checkScroll = () => {
   showScrollBtn.value = window.scrollY > 400;
