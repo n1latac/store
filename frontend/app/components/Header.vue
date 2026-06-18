@@ -120,6 +120,7 @@
                     <div style="display: flex; flex-direction: column; gap: 3px;">
                       <strong><a href="tel:+380930938313" style="font-size: 15px; line-height: 1.3;">+38 (093) 093 83 13</a></strong>
                       <strong><a href="tel:+380680938313" style="font-size: 15px; line-height: 1.3;">+38 (068) 093 83 13</a></strong>
+                      <span style="font-size: 12px; color: rgba(255, 255, 255, 0.7); margin-top: 2px;">{{ t('headerWorkingHours') }}</span>
                     </div>
                   </div>
                 </div>
@@ -219,8 +220,8 @@
                     <li :class="{ active: route.path === '/' }"><NuxtLink to="/">{{ t('home') }}</NuxtLink></li>
                     <li :class="{ active: route.path === '/shop' }"><NuxtLink to="/shop">{{ t('shop') }}</NuxtLink></li>
                     <li :class="{ active: route.path === '/about' }"><NuxtLink to="/about">{{ t('about') }}</NuxtLink></li>
+                    <li :class="{ active: route.path === '/payment-delivery' }"><NuxtLink to="/payment-delivery">{{ t('paymentDelivery') }}</NuxtLink></li>
                     <li :class="{ active: route.path === '/cart' }"><NuxtLink to="/cart">{{ t('cart') }}</NuxtLink></li>
-                    <li :class="{ active: route.path === '/checkout' }"><NuxtLink to="/checkout">{{ t('checkout') }}</NuxtLink></li>
                   </ul>
                 </nav>
                 <!-- main menu navbar end -->
@@ -290,8 +291,8 @@
                 <li><NuxtLink to="/" @click="isMobileMenuOpen = false">{{ t('home') }}</NuxtLink></li>
                 <li><NuxtLink to="/shop" @click="isMobileMenuOpen = false">{{ t('shop') }}</NuxtLink></li>
                 <li><NuxtLink to="/about" @click="isMobileMenuOpen = false">{{ t('about') }}</NuxtLink></li>
+                <li><NuxtLink to="/payment-delivery" @click="isMobileMenuOpen = false">{{ t('paymentDelivery') }}</NuxtLink></li>
                 <li><NuxtLink to="/cart" @click="isMobileMenuOpen = false">{{ t('cart') }}</NuxtLink></li>
-                <li><NuxtLink to="/checkout" @click="isMobileMenuOpen = false">{{ t('checkout') }}</NuxtLink></li>
                 <li style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px; padding-top: 10px;">
                   <a href="https://t.me/+380930938313" target="_blank" style="display: flex !important; align-items: center; gap: 8px;">
                     <i class="fa fa-paper-plane" style="color: #00E5FF;"></i> Telegram Support
@@ -344,9 +345,27 @@ const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 const { data: categories } = await useFetch<any[]>(`${apiBase}/categories`);
 
+const CATEGORY_ORDER = [
+  "Персональні комп’ютери та моноблоки",
+  "Ноутбуки",
+  "Монітори",
+  "Багатофункціональні пристрої та принтери",
+  "Інтерактивне обладнання",
+  "Додаткове обладнання до ПК",
+  "Дидактика"
+];
+
 const parentCategories = computed(() => {
   if (!categories.value) return [];
-  return categories.value.filter((cat) => cat.parent_id === null);
+  const parents = categories.value.filter((cat) => cat.parent_id === null);
+  return [...parents].sort((a, b) => {
+    const indexA = CATEGORY_ORDER.indexOf(a.name_uk);
+    const indexB = CATEGORY_ORDER.indexOf(b.name_uk);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
 });
 
 const getSubCategories = (parentId: number) => {

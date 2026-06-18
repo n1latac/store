@@ -143,6 +143,31 @@
               </div>
               <!-- single sidebar end -->
 
+              <!-- single sidebar start (Deals/Special Offers Filter) -->
+              <div class="sidebar-single">
+                <div class="sidebar-title">
+                  <h3>{{ t('filterOffersTitle') }}</h3>
+                </div>
+                <div class="sidebar-body">
+                  <ul class="checkbox-container">
+                    <li>
+                      <div class="custom-control custom-checkbox">
+                        <input 
+                          type="checkbox" 
+                          class="custom-control-input" 
+                          id="filter-deals" 
+                          v-model="showDealsOnly"
+                        >
+                        <label class="custom-control-label" for="filter-deals">
+                          {{ locale === 'uk' ? 'Акційні пропозиції / Уцінка' : 'Promotional offers / Discount' }}
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- single sidebar end -->
+
               <!-- single sidebar start (Brand Checklist) -->
               <div class="sidebar-single" v-if="false && availableBrands.length > 0">
                 <div class="sidebar-title">
@@ -353,6 +378,23 @@ const maxPrice = ref<number | null>(null);
 const selectedBrands = ref<string[]>([]);
 const selectedRams = ref<string[]>([]);
 
+// Sync showDealsOnly with route query parameter
+const showDealsOnly = ref(route.query.is_deal === 'true');
+
+watch(() => route.query.is_deal, (newVal) => {
+  showDealsOnly.value = newVal === 'true';
+});
+
+watch(showDealsOnly, (newVal) => {
+  const currentQuery = { ...route.query };
+  if (newVal) {
+    currentQuery.is_deal = 'true';
+  } else {
+    delete currentQuery.is_deal;
+  }
+  router.push({ query: currentQuery });
+});
+
 // Price Ranges Config
 const priceRanges = computed(() => [
   { label: locale.value === 'uk' ? 'Усі ціни' : 'All prices', min: null, max: null },
@@ -381,9 +423,27 @@ const apiBase = config.public.apiBase;
 const { data: categories } = await useFetch<any[]>(`${apiBase}/categories`);
 const { data: products } = await useFetch<any[]>(`${apiBase}/products`);
 
+const CATEGORY_ORDER = [
+  "Персональні комп’ютери та моноблоки",
+  "Ноутбуки",
+  "Монітори",
+  "Багатофункціональні пристрої та принтери",
+  "Інтерактивне обладнання",
+  "Додаткове обладнання до ПК",
+  "Дидактика"
+];
+
 const parentCategories = computed(() => {
   if (!categories.value) return [];
-  return categories.value.filter(cat => cat.parent_id === null);
+  const parents = categories.value.filter(cat => cat.parent_id === null);
+  return [...parents].sort((a, b) => {
+    const indexA = CATEGORY_ORDER.indexOf(a.name_uk);
+    const indexB = CATEGORY_ORDER.indexOf(b.name_uk);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
 });
 
 const getSubCategories = (parentId: number) => {
@@ -510,6 +570,11 @@ const filteredProducts = computed(() => {
     );
   }
 
+  // Deals filter
+  if (showDealsOnly.value) {
+    list = list.filter(p => p.is_deal === true);
+  }
+
   // Category filter (includes subcategories if parent selected)
   if (activeCategoryId.value) {
     const targetIds = getCategoryIdsToFilter(activeCategoryId.value);
@@ -560,7 +625,7 @@ const paginatedProducts = computed(() => {
 });
 
 // Watch filtering to reset current page
-watch([activeCategoryId, minPrice, maxPrice, selectedBrands, selectedRams, sortBy, () => route.query.search], () => {
+watch([activeCategoryId, minPrice, maxPrice, selectedBrands, selectedRams, sortBy, showDealsOnly, () => route.query.search], () => {
   currentPage.value = 1;
 });
 

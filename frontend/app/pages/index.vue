@@ -641,7 +641,8 @@ const productsCat2 = computed(() => {
 
 // Group lists (Special, New, Most Viewed)
 const groupOffers = computed(() => {
-  return products.value.slice(0, 3);
+  if (!products.value) return [];
+  return products.value.filter(p => p.is_deal === true).slice(0, 3);
 });
 
 const groupNew = computed(() => {

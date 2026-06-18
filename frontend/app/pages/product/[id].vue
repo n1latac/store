@@ -167,7 +167,7 @@
                             </p>
                           </div>
                           <p v-if="product.attributes?.external_link" class="mt-3">
-                            {{ locale === 'uk' ? 'Ви можете ознайомитися з усіма деталями, відгуками та оглядами на першоджерелі:' : 'You can read all the details, reviews, and specs on the original source:' }}
+                            {{ t('productSpecsOriginal') }}
                             <a :href="product.attributes.external_link" target="_blank">{{ product.attributes.external_link }}</a>
                           </p>
                         </div>

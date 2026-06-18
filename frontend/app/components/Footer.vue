@@ -5,39 +5,39 @@
       <div class="container">
         <div class="footer-features-inner">
           <div class="row">
-            <div class="col-lg-4 col-md-4">
+            <div class="col-lg-6 col-md-6">
               <div class="single-features-item footer-feature-item">
                 <div class="features-icon">
                   <i class="ion-ios-telephone"></i>
                 </div>
                 <div class="features-content" style="line-height: 1.2;">
-                  <h5 style="margin-bottom: 2px;">+38 (093) 093 83 13</h5>
-                  <h5>+38 (068) 093 83 13</h5>
+                  <h5 style="margin-bottom: 2px;"><a href="tel:+380930938313" style="color: inherit;">+38 (093) 093 83 13</a></h5>
+                  <h5><a href="tel:+380680938313" style="color: inherit;">+38 (068) 093 83 13</a></h5>
                   <p>{{ t('footerFreeSupport') }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="col-lg-4 col-md-4">
-              <div class="single-features-item footer-feature-item">
+            <div class="col-lg-6 col-md-6">
+              <div class="single-features-item footer-feature-item align-items-start">
                 <div class="features-icon">
                   <i class="ion-help-buoy"></i>
                 </div>
-                <div class="features-content">
-                  <h5>support@aivixtech.com</h5>
-                  <p>{{ t('footerOrderSupport') }}</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4">
-              <div class="single-features-item footer-feature-item">
-                <div class="features-icon">
-                  <i class="ion-clock"></i>
-                </div>
-                <div class="features-content">
-                  <h5>{{ t('footerWorkingHours') }}</h5>
-                  <p>{{ t('footerWorkingDays') }}</p>
+                <div class="features-content" style="line-height: 1.4;">
+                  <div class="d-flex flex-column" style="gap: 5px;">
+                    <div>
+                      <h5 style="margin-bottom: 0;"><a href="mailto:sales@aivixtech.com" style="color: inherit;">sales@aivixtech.com</a></h5>
+                      <span style="font-size: 12px; opacity: 0.8; color: #a0a0a0;">{{ t('emailSales') }}</span>
+                    </div>
+                    <div>
+                      <h5 style="margin-bottom: 0;"><a href="mailto:support@aivixtech.com" style="color: inherit;">support@aivixtech.com</a></h5>
+                      <span style="font-size: 12px; opacity: 0.8; color: #a0a0a0;">{{ t('emailSupport') }}</span>
+                    </div>
+                    <div>
+                      <h5 style="margin-bottom: 0;"><a href="mailto:service@aivixtech.com" style="color: inherit;">service@aivixtech.com</a></h5>
+                      <span style="font-size: 12px; opacity: 0.8; color: #a0a0a0;">{{ t('emailService') }}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -80,6 +80,8 @@
                   <li><NuxtLink to="/shop">{{ t('footerCatalog') }}</NuxtLink></li>
                   <li><NuxtLink to="/shop">{{ t('footerNewArrivals') }}</NuxtLink></li>
                   <li><NuxtLink to="/about">{{ t('about') }}</NuxtLink></li>
+                  <li><NuxtLink to="/payment-delivery">{{ t('paymentDelivery') }}</NuxtLink></li>
+                  <li><NuxtLink to="/shop?is_deal=true">{{ locale === 'uk' ? 'Акції' : 'Promotions' }}</NuxtLink></li>
                 </ul>
               </div>
             </div>
@@ -93,7 +95,6 @@
                 </div>
                 <ul class="footer-widget-body">
                   <li><NuxtLink to="/cart">{{ t('myCart') }}</NuxtLink></li>
-                  <li><NuxtLink to="/checkout">{{ t('checkout') }}</NuxtLink></li>
                   <li>
                     <a href="https://t.me/+380930938313" target="_blank">
                       Telegram Support
